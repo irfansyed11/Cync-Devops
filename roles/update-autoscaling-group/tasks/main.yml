@@ -1,0 +1,19 @@
+---
+- name: Retrieve current Auto Scaling Group properties for the ASG
+  command: "aws --region {{ region }} autoscaling describe-auto-scaling-groups --auto-scaling-group-names {{asgname}}"
+  register: asg_properties_result
+
+- name: Set asg_properties variable from JSON output if the Auto Scaling Group already exists
+  set_fact:
+    asg_properties: "{{ (asg_properties_result.stdout | from_json).AutoScalingGroups[0] }}"
+  when: (asg_properties_result.stdout | from_json).AutoScalingGroups | count
+
+- name: Update Auto Scaling Group with launch configuration name
+  ec2_asg:
+    region: "{{ region }}"
+    name: "{{asgname}}"
+    launch_config_name: "{{ lcname }}"  #- shell: date +%Y%m%d%H%M%S register: timestamp
+    state: present
+  register: asg_result
+
+

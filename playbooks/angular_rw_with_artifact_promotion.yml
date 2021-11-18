@@ -1,0 +1,97 @@
+---
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  roles:
+    - { role: ../roles/send-sns-notification, status: started }
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to check the backup counts
+    block:
+    - include_role:
+        name: ../roles/get-ami-snpshot-lc-count
+    rescue:
+    - include_role:
+        name: ../roles/send-sns-notification
+      vars:
+        status: Backup count error!
+    - fail:
+        msg: 'Failed due to the backup count error!'
+
+- hosts: jumphost
+  connection: local
+  remote_user: ubuntu
+  tasks:
+  - name: Block to copy angular artifacts
+    block:
+    - include_role:
+        name: ../roles/copy-rw-angular
+    #ignore_errors: true
+    rescue:
+      - include_role:
+          name: ../roles/send-sns-notification
+        vars:
+          status: failed copy angular artifacts
+      - fail:
+          msg: 'Copy Angular Artifacts failed'
+
+- hosts: angular-rw-hosts
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block for angular deployment
+    block:
+    - include_role:
+        name: ../roles/rw-angular
+    #ignore_errors: true
+    rescue:
+      - set_fact:
+          statusMessage: "failed"
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to send angular Report writer deployment notification
+    block:
+    - include_role:
+        name: ../roles/send-sns-notification
+      vars:
+        status: failed angular Report writer deployment
+      with_items: "{{ groups['angular-rw-hosts'] }}"
+      when: hostvars[item].statusMessage == "failed"
+
+  - name: End the play if deployment fails
+    block:
+    - fail: msg="Angular Report writer deployment failed"
+      with_items: "{{ groups['angular-rw-hosts'] }}"
+      when: hostvars[item].statusMessage == "failed"
+
+  - name: Block to create AMI, LC and ASG
+    block:
+    - include_role:
+         name: ../roles/create-ami-lc-updateasg
+      with_items: "{{ angular_ami_tags }}"
+    #ignore_errors: true
+    rescue:
+      - include_role:
+          name: ../roles/send-sns-notification
+        vars:
+          status: failed creating ami/lc/asg
+      - fail:
+          msg: 'Failed to create the AMI/LC/ASG'
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  roles:
+    - role: ../roles/send-sns-notification
+      status: success
+

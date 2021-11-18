@@ -1,0 +1,14 @@
+---
+- name: Downloading from Source Bucket
+  aws_s3:
+   bucket: "{{ SourceFactoring-AppArtifactBucket }}"
+   object: "/cync-factoring-app/{{ SourceArtifactFactoring-AppName}}"
+   dest: /home/ubuntu/factoring-app.tar.gz
+   mode: get
+
+- name: Uploading to Destination Bucket
+  aws_s3:
+   bucket: "{{ DestinationFactoring-AppArtifactBucket }}"
+   object: "/cync-factoring-app/{{ SourceArtifactFactoring-AppName }}"
+   src: /home/ubuntu/factoring-app.tar.gz
+   mode: put

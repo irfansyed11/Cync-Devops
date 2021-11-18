@@ -1,0 +1,110 @@
+def jsonData = "";
+"""
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.js"
+    integrity="sha256-FnlET6HjAjzJk+xp/VPmlH5dKcYClzy2/yl08DuN4eA=" crossorigin="anonymous"></script>
+
+ 
+
+<script>      
+Q( document ).ready(function() {
+    Q('form[name="parameters"] table tbody')[3].remove();
+
+});
+
+var i,fragment= "";
+var settings = {
+  "async": true,
+  "crossDomain": true,
+  "url": "https://13e1e30r5g.execute-api.us-east-1.amazonaws.com/v5/get-server-status",
+"headers": {
+    'X-Api-Key': 'laxiZ7pvSC5jkzvVwZ6MINCnigF2F8xagv3vfNOi',
+  'Content-Type': 'application/json; charset=utf-8'
+},
+   "data": JSON.stringify({"account_name": "dev"}),
+  "method": "POST"
+}
+ Q.ajax(settings).done(function (response) {
+	var btnAPICall = "";
+	for (i in response.status) 
+	{    
+	if (response.status[i].current_status === "stopped")
+		{ 
+			 btnAPICall = "<button id='btn-"+ response.status[i].application_name + "-" + response.status[i].environment+ "' class='button_start' value='start'>START</button>";
+			fragment +="<tr width=100%><td>" + response.status[i].application_name + "</td><td>" + response.status[i].environment + "</td>" + "<td>" + btnAPICall + "</td><td> <span id='span-"+ response.status[i].application_name + "-" + response.status[i].environment+"'> </span> </td ></tr>";
+		}
+		else if(response.status[i].current_status === "running")
+		{
+			 btnAPICall = "<button id='btn-"+ response.status[i].application_name + "-" + response.status[i].environment+ "' class='button_stop' value='stop'>STOP</button>";
+			fragment +="<tr width=100%><td>" + response.status[i].application_name + "</td><td>" + response.status[i].environment + "</td>" + "<td>" + btnAPICall + "</td><td> <span id='span-"+ response.status[i].application_name + "-" + response.status[i].environment+"'> </span></td ></tr>";
+		} 
+		
+	}
+    
+	var showData= Q('#myTable');
+	showData.html("<tr width=100%><td colspan=5 style='background-color:#ffp0;'><b>CYNC Application Server Status</b></td ></tr>");
+    showData.append("<tr width=100%><td><b>Application_name</b></td><td><b> Environment</b></td><td> <b>Action</b></td ><td> <b>Post_Action_Status</b></td ></tr>") 
+    showData.append(fragment);  
+
+ 
+	 var btnAction, appname, envi, action = "";     
+	 Q("[id*='btn-']").click(function(){
+	var strBtnID = Q("#"+this.id).prop("id");
+		var arrBtnID = strBtnID.split("-");
+               var span_txtid = strBtnID.replace("btn","span");
+	  	var appname=arrBtnID[1];
+		var envi=arrBtnID[2];
+		var action=Q("#"+strBtnID).text().toLowerCase();
+		var strPostURL='https://13e1e30r5g.execute-api.us-east-1.amazonaws.com/v5/automation-action';
+Q.ajax({
+  "async": true,
+  "crossDomain": true,
+   beforeSend: function(xhrObj){
+        xhrObj.setRequestHeader("Content-Type","application/json");
+        xhrObj.setRequestHeader("Accept","application/json");
+        
+        Q("#"+strBtnID).prop("disabled",true);
+    },
+        url: strPostURL,
+        type: "POST",
+        dataType: "json",
+	"headers": {
+	    'X-Api-Key': 'laxiZ7pvSC5jkzvVwZ6MINCnigF2F8xagv3vfNOi',
+	  'Content-Type': 'application/json; charset=utf-8'
+	},
+        data: JSON.stringify({application_name: appname,environment: envi,action: action,account_name: "dev"}),
+        success: function(response){
+               if(response.status == "Success")
+               {
+                //if(action == "start"){
+                //Q("#"+strBtnID).text("STOP");
+                //Q("#"+strBtnID).removeClass("button_start").addClass("button_stop");
+                //} else {
+                //Q("#"+strBtnID).text("START");
+                //Q("#"+strBtnID).removeClass("button_stop").addClass("button_start");
+                //}
+                Q("#"+strBtnID).prop("disabled",false);
+                Q("#"+span_txtid).text(response.message);
+              }
+              else {
+                //Q("#"+strBtnID).text(action.toUpperCase());
+                Q("#"+strBtnID).prop("disabled",false);
+                Q("#"+span_txtid).text(response.error);
+              }
+        },
+        error: function(response){
+                //Q("#"+strBtnID).text(action.toUpperCase());
+                Q("#"+strBtnID).prop("disabled",false);
+                Q("#"+span_txtid).text(response.message);
+        }
+});
+
+});
+}).fail(function( jqXHR, textStatus ) {
+  console.log( "Request failed" );
+ Q("#myTable tr:first td").html("<b>Please check API server, having problem to fetch data to render UI....</b>");
+}); 
+
+ 
+
+    </script>
+"""

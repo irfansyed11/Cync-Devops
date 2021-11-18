@@ -1,0 +1,10 @@
+---
+- name: Download the RDS file from s3 bucket to the remote node
+  command: bash -lc "aws s3 cp s3://{{configFileBucket}}/rds-combined-ca-bundle.pem /opt/rds-combined-ca-bundle.pem"
+
+- name: change the owner permission
+  file:
+    path: /opt/rds-combined-ca-bundle.pem
+    owner: ubuntu
+    group: ubuntu
+    mode: 0644

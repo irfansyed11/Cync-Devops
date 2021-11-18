@@ -1,0 +1,121 @@
+---
+# tasks file for send-sns-notification
+  - name: Send Angular notification for deployment.
+    sns:
+      msg: "Deployment {{ status }} in {{ envname }} environment for Angular Version: {{ angular_version }}."
+      subject: "Cync Angular Deployment to {{ envname }} environment - {{ status }}"
+      topic: "arn:aws:sns:{{ sns_region }}:{{ aws_account_id }}:{{ sns_topic }}"
+      region: "{{ sns_region }}"
+    when: angular_version is defined
+
+  - name: Send ROR notification for deployment.
+    sns:
+      msg: "Deployment {{ status }} in {{ envname }} environment for ROR Version:{{ ror_version }}."
+      subject: "Cync RoR Deployment to {{ envname }} environment - {{ status }}"
+      topic: "arn:aws:sns:{{ sns_region }}:{{ aws_account_id }}:{{ sns_topic }}"
+      region: "{{ sns_region }}"
+    when: ror_version is defined
+
+  - name: Send Cash-Angular notification for deployment.
+    sns:
+      msg: "Deployment {{ status }} in {{ envname }} environment for Cash-Angular Version: {{ cashapp_angular_version }}."
+      subject: "Cash-angular Deployment for {{ envname }} environment - {{ status }}"
+      topic: "arn:aws:sns:{{ sns_region }}:{{ aws_account_id }}:{{ sns_topic }}"
+      region: "{{ sns_region }}"
+    when: cashapp_angular_version is defined
+
+  - name: Send Termloan Angular notification for deployment.
+    sns:
+      msg: "Deployment {{ status }} in {{ envname }} environment for Termloan Angular Version: {{ termloan_angular_version }}."
+      subject: "Cync Termloan Angular Deployment to {{ envname }} environment - {{ status }}"
+      topic: "arn:aws:sns:{{ sns_region }}:{{ aws_account_id }}:{{ sns_topic }}"
+      region: "{{ sns_region }}"
+    when: termloan_angular_version is defined
+  
+  - name: Send Reportwriter Angular notification for deployment.
+    sns:
+      msg: "Deployment {{ status }} in {{ envname }} environment for Reportwriter Angular Version: {{ rw_angular_version }}."
+      subject: "Cync Reportwriter Angular Deployment to {{ envname }} environment - {{ status }}"
+      topic: "arn:aws:sns:{{ sns_region }}:{{ aws_account_id }}:{{ sns_topic }}"
+      region: "{{ sns_region }}"
+    when: rw_angular_version is defined
+
+  - name: Send finAngular notification for deployment.
+    sns:
+      msg: "Deployment {{ status }} in {{ envname }} environment for Angular Version: {{ financial_angular_version }}."
+      subject: "Financial Angular Deployment to {{ envname }} environment - {{ status }}"
+      topic: "arn:aws:sns:{{ sns_region }}:{{ aws_account_id }}:{{ sns_topic }}"
+      region: "{{ sns_region }}"
+    when: financial_angular_version is defined
+
+  - name: Send ror-cash notification for deployment.
+    sns:
+      msg: "Deployment {{ status }} in {{ envname }} environment for ror-cash Version: {{ cashapp_version  }}."
+      subject: "ror-cash Deployment to {{ envname }} environment - {{ status }}"
+      topic: "arn:aws:sns:{{ sns_region }}:{{ aws_account_id }}:{{ sns_topic }}"
+      region: "{{ sns_region }}"
+    when: cashapp_version is defined
+
+  - name: Send Multi-loan-ror notification for deployment.
+    sns:
+      msg: "Deployment {{ status }} in {{ envname }} environment for Multi-loan-ror Version: {{ multiloanror_version  }}."
+      subject: "Multi-Loan-ror Deployment to {{ envname }} environment - {{ status }}"
+      topic: "arn:aws:sns:{{ sns_region }}:{{ aws_account_id }}:{{ sns_topic }}"
+      region: "{{ sns_region }}"
+    when: multiloanror_version is defined
+
+  - name: Send ror-factoringapp notification for deployment.
+    sns:
+      msg: "Deployment {{ status }} in {{ envname }} environment for ror-factoringapp Version: {{ factoring_ror_version }}."
+      subject: "ROR-FactoringApp Deployment to {{ envname }} environment - {{ status }}"
+      topic: "arn:aws:sns:{{ sns_region }}:{{ aws_account_id }}:{{ sns_topic }}"
+      region: "{{ sns_region }}"
+    when: factoring_ror_version is defined
+  
+  - name: Send ror-AuthApp notification for deployment.
+    sns:
+      msg: "Deployment {{ status }} in {{ envname }} environment for ror-Authapp Version: {{ authapp_ror_version }}."
+      subject: "ROR-AuthApp Deployment to {{ envname }} environment - {{ status }}"
+      topic: "arn:aws:sns:{{ sns_region }}:{{ aws_account_id }}:{{ sns_topic }}"
+      region: "{{ sns_region }}"
+    when: authapp_ror_version is defined
+
+  - name: Send ML-apar notification for deployment.
+    sns:
+      msg: "Deployment {{ status }} in {{ envname }} environment for ml-apar Version: {{ ml_apar_version }}."
+      subject: "ML-APAR Deployment to {{ envname }} environment - {{ status }}"
+      topic: "arn:aws:sns:{{ sns_region }}:{{ aws_account_id }}:{{ sns_topic }}"
+      region: "{{ sns_region }}"
+    when: ml_apar_version is defined
+
+  - name: Send ABL-Angular notification for deployment.
+    sns:
+      msg: "Deployment {{ status }} in {{ envname }} environment for Abl-Angular Version: {{ abl_angular_version }}."
+      subject: "ABL-Angular Deployment to {{ envname }} environment - {{ status }}"
+      topic: "arn:aws:sns:{{ sns_region }}:{{ aws_account_id }}:{{ sns_topic }}"
+      region: "{{ sns_region }}"
+    when: abl_angular_version is defined
+
+  - name: Send ror-factoring-rails6 notification for deployment.
+    sns:
+      msg: "Deployment {{ status }} in {{ envname }} environment for ror-factoring-rails6 Version: {{ factoring_ror6_version }}."
+      subject: "ROR-Factoring-rails6 Deployment to {{ envname }} environment - {{ status }}"
+      topic: "arn:aws:sns:{{ sns_region }}:{{ aws_account_id }}:{{ sns_topic }}"
+      region: "{{ sns_region }}"
+    when: factoring_ror6_version is defined
+
+  - name: Send webhelp notification for deployment.
+    sns:
+      msg: "Deployment {{ status }} in {{ envname }} environment for webhelp Version: {{ webhelp_version }}."
+      subject: "Webhelp Deployment to {{ envname }} environment - {{ status }}"
+      topic: "arn:aws:sns:{{ sns_region }}:{{ aws_account_id }}:{{ sns_topic }}"
+      region: "{{ sns_region }}"
+    when: webhelp_version is defined
+    
+  - name: Send BBC notification for deployment.
+    sns:
+      msg: "Deployment {{ status }} in {{ envname }} environment for bbc Version: {{ bbc_version }}."
+      subject: "BBC Deployment to {{ envname }} environment - {{ status }}"
+      topic: "arn:aws:sns:{{ sns_region }}:{{ aws_account_id }}:{{ sns_topic }}"
+      region: "{{ sns_region }}"
+    when: bbc_version is defined

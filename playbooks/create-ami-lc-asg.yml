@@ -1,0 +1,18 @@
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to create AMI, LC and ASG
+    block:
+    - include_role:
+       name: ../roles/test-staging-create-ami-lc-updateasg
+      with_items: "{{ ami_tags }}"
+    #ignore_errors: true
+    rescue:
+      - include_role:
+          name: ../roles/send-sns-notification
+        vars:
+          status: ror deployment successful, failed creating ami/lc/asg
+      - fail:
+          msg: 'Failed to create the AMI/LC/ASG'

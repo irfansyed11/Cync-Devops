@@ -1,0 +1,97 @@
+---
+- name: create angular_env directory example
+  file:
+    path: ~/angular_env
+    state: directory
+    mode: 0755
+- name: download the artifact from s3 bucket
+  aws_s3:
+    bucket: "{{ AngularArtifactBucketName }}"
+    object: "/cync/{{ AngularArtifactName }}"
+    dest: ~/ngbuild_tar.gz
+    mode: get
+- name: Download the environment configuration file from s3 bucket
+  aws_s3:
+        bucket: "{{ configureBucketName }}"
+        object: /env.json
+        dest: ~/angular_env/env.json
+        mode: get
+- name: delete contents of angular folder
+  #shell: rm -rf "{{ angularPath }}/*"
+  command: "rm -rf {{ angularPath }}/*"
+  #file:
+   # path: "{{ angularPath }}/*"
+    #state: absent
+- name: copy the artifact file to respective application folder
+  copy:
+    src: ~/ngbuild_tar.gz
+    dest: "{{ angularPath }}/ngbuild_tar.gz"   #/opt/angular/ngbuild_tar.gz
+    remote_src: yes
+- name: Extract angular build
+  unarchive:
+    src: "{{ angularPath }}/ngbuild_tar.gz" #/opt/angular/ngbuild_tar.gz
+    dest: "{{ angularPath }}"
+    remote_src: yes
+
+- name: Ensure directories are 0755
+  command: find "{{ angularPath }}"/assets -type d -exec chmod 0755 {} \;
+
+- name: Ensure files are 0644
+  command: find "{{ angularPath }}" -type f -exec chmod 0644 * {} \;
+
+- name: copy the configuration file to respective application folder
+  copy:
+    src: ~/angular_env/env.json
+    dest: "{{ angularPath }}/assets/environment/env.json"
+    remote_src: yes
+- name: Fetch env file to local
+  fetch:
+    src: "{{ angularPath }}/assets/environment/env.json"
+    dest: ~/angular_env/env.json
+    flat: yes
+- name: Get the ENV name
+  set_fact:
+    env_name: "{{ (lookup('file', '~/angular_env/env.json') | from_json).get('env') }}"
+- name: Fetch config file to local
+  fetch:
+    src: "{{ angularPath }}/assets/environment/config.{{env_name}}.json"
+    dest: ~/angular_env/config.json
+    flat: yes
+#- name: Get the CDN name
+#  set_fact:
+#    cdn_name: "{{ (lookup('file', '~/angular_env/config.json') | from_json).get('cdn_url') }}"
+- debug:
+    msg: "env_name {{ env_name }} "  #cdn_name {{ cdn_name }}"
+#- name: Set the CDN name for src
+#  replace:
+#    path: /opt/angular/index.html
+#    regexp: 'src="'
+#    replace: "src=\"{{cdn_name}}"
+#- name: Set the CDN name for href
+#  replace:
+#    path: /opt/angular/index.html
+#    regexp: 'link href="'
+#    replace: "link href=\"{{cdn_name}}"
+#- name: sync the application related assets to CDN bucket
+#  when: inventory_hostname in groups['angular-hosts']
+#  s3_sync:
+#    bucket: "{{ angularcdnbucket }}"
+#    permission: public-read
+#    file_root: /opt/angular
+#    key_prefix: angular
+#    mode: push
+#    region: "{{ regionname }}"
+- name: delete the tar.gz file
+  file:
+    path: "{{ angularPath }}/ngbuild_tar.gz"
+    state: absent
+#- name: restart nginx
+ # become: yes
+  #command: service nginx restart
+  #- name: restart nginx
+  #become: yes
+  #service:
+  #  name: nginx
+  #  state: restarted
+
+

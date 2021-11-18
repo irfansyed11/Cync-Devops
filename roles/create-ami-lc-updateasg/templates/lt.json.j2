@@ -1,0 +1,20 @@
+{
+    "KeyName": "{{ec2_instances.instances[0].key_name}}",
+    "IamInstanceProfile": {
+       "Name": "{{ec2_instances.instances[0].iam_instance_profile.arn.split('/')[1]}}"
+     },
+     "EbsOptimized": true, 
+    "SecurityGroupIds": ["{{ec2_instances.instances[0].security_groups[0].group_id}}"],    
+    "BlockDeviceMappings":[
+        {
+            "DeviceName":"{{ deviceName }}",
+            "Ebs":{
+                "VolumeType":"{{ deviceType }}",
+                "VolumeSize": {{item.size}}
+            }
+        }
+    ],
+    "ImageId":"{{ami_array.image_id}}",
+    "InstanceType":"{{instanceType}}",
+    "UserData": "{{lookup('template','user_data.sh.j2') | b64encode}}"
+}

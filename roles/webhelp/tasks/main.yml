@@ -1,0 +1,35 @@
+---
+- name: download the artifact from s3 bucket
+  aws_s3:
+    bucket: "{{ WebhelpArtifactBucketName }}"
+    object: "/cync/{{ WebhelpArtifactName }}"
+    dest: ~/webhelp_tar.gz
+    mode: get
+
+- name: delete contents of webhelp folder
+  command: "rm -rf {{ webhelpPath }}/*"
+
+- name: copy the artifact file to respective application folder
+  copy:
+    src: ~/webhelp_tar.gz
+    dest: "{{ webhelpPath }}/webhelp_tar.gz"   #/opt/web-help/webhelp_tar.gz
+    remote_src: yes
+
+- name: Extract webhelp build
+  unarchive:
+    src: "{{ webhelpPath }}/webhelp_tar.gz" #/opt/web-help/webhelp_tar.gz
+    dest: "{{ webhelpPath }}"
+    remote_src: yes
+
+- name: Ensure directories are 0755
+  command: find "{{ webhelpPath }}"/content/ -type d -exec chmod 0755 {} \;
+
+- name: Ensure files are 0644
+  command: find "{{ webhelpPath }}" -type f -exec chmod 0644 * {} \;
+
+- name: delete the tar.gz file
+  file:
+    path: "{{ webhelpPath }}/webhelp_tar.gz"
+    state: absent
+
+

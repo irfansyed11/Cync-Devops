@@ -1,0 +1,13 @@
+---
+- name: create launch config
+  ec2_lc:
+    name: "{{lcname}}"
+    image_id: "{{ item.image_id }}"
+    key_name: "{{ keyname }}"
+    region: "{{ region }}"
+    security_groups: "{{ groupid }}"
+    instance_type: "{{ instancetype }}"
+    assign_public_ip: no
+  with_items: "{{ ami_array.results}}"
+  register: lc_result
+

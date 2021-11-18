@@ -1,0 +1,50 @@
+---
+- name: delete contents of opt/cash-application-angular directory
+  shell: "rm -rf {{ablangularPath}}/*"
+
+- name: create abl_angular_env directory example
+  file:
+    path: ~/abl_angular_env
+    state: directory
+    mode: 0755
+
+- name: download the artifact from s3 bucket
+  aws_s3:
+    bucket: "{{ AngularAblArtifactBucketName }}"
+    object: "/cync-abl-angular/{{ AngularAblArtifactName }}"
+    dest: "{{ablangularPath}}/abl_application_angular.tar.gz"  
+    mode: get
+
+- name: Download the environment configuration file from s3 bucket
+  aws_s3:
+        bucket: "{{ configureBucketName }}"
+        object: /abl-angular-env.json
+        dest: ~/abl_angular_env/abl-angular-env.json
+        mode: get
+
+- name: Extract abl angular build
+  unarchive:
+    src: "{{ablangularPath}}/abl_application_angular.tar.gz"  
+    dest: "{{ablangularPath}}" 
+    remote_src: yes
+
+#- name: Ensure directories are 0755
+#  command: find "{{ablangularPath}}"/cync-app -type d -exec chmod 0755 {} \;
+
+- name: Ensure directories are 0755
+  command: find "{{ablangularPath}}"/assets -type d -exec chmod 0755 {} \;
+
+- name: Ensure files are 0644
+  command: find "{{ablangularPath}}" -type f -exec chmod 0644 * {} \;
+
+
+#- name: copy the configuration file to respective application folder
+#  copy:
+#    src: ~/angular_cashapp_env/ca-env.json
+#    dest: /opt/cash-application-angular/assets/environment/env.json 
+#    remote_src: yes
+
+- name: delete the tar.gz file
+  file:
+    path: "{{ablangularPath}}/abl_application_angular.tar.gz"  
+    state: absent

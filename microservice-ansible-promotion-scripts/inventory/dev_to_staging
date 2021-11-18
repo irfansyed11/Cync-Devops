@@ -1,0 +1,19 @@
+[my-local]
+localhost
+
+[my-local:vars]
+ecr_source_aws_account='148654267025'
+ecr_destination_aws_account='798793081579'
+env_name='staging'
+config_s3_bucket='usecase-conf-bucket'
+cross_account_role_name_from_destination_account='Idx-Deployments-Role-Test'
+region='us-east-1'
+sns_topic='Cync-Deployment-Notification'
+
+ansible_script_location= '/home/ubuntu/ms-ansible-script'
+all_service_info_file_location='/roles/read-yaml-file/vars/'
+usecase_micro_service_object_name='all_service_current_running_version.yaml'
+rollback_object_name='rollback_list.yaml'
+ecs_cluster_name='POC-ECS'
+ecs_cluster_region='us-east-1'
+

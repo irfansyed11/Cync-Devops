@@ -1,0 +1,121 @@
+[tag_Name_NDS_CYNC_PRE_PROD_Cron]
+
+[tag_Name_NDS_CYNC_PRE_PROD_Nginx]
+
+[tag_Name_NDS_CYNC_PRE_PROD_Sidekiq]
+
+[tag_Name_NDS_CYNC_PRE_PROD_Unicorn]
+
+[tag_Name_NDS_CYNC_PRE_PROD_SidekiqSimilarity]
+
+[unicorn-hosts:children]
+tag_Name_NDS_CYNC_PRE_PROD_Unicorn
+
+[sidekiq-hosts:children]
+tag_Name_NDS_CYNC_PRE_PROD_Sidekiq
+
+[cron-hosts:children]
+tag_Name_NDS_CYNC_PRE_PROD_Cron
+
+[angular-hosts:children]
+tag_Name_NDS_CYNC_PRE_PROD_Nginx
+
+[ror-cashapp-hosts:children]
+
+
+[angular-cash-hosts:children]
+
+
+[sidekiq-similarity-hosts:children]
+tag_Name_NDS_CYNC_PRE_PROD_SidekiqSimilarity
+
+[jumphost]
+localhost
+
+[jumphost:vars]
+amicount=450
+lccount=175
+snapcount=550
+count=10
+bucketName=nds-cync-pre-prod-artifacts
+sns_region=us-east-1
+sns_topic=Cync-Deployment-Notification
+envname=preprod
+aws_account_id=436415935402
+regionname=us-east-1
+sidekiqSimilarityTag=NDS-CYNC-PRE-PROD-SidekiqSimilarity
+nginx={'tags': {'InstanceName': 'NDS-CYNC-PRE-PROD-Nginx', 'deleteami': '1'},'noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-PRE-PROD-Nginx', 'instanceType' : 't2.medium', 'autoScalingGroupName': ' NDS-CYNC-PRE-PROD-Nginx-ASG' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'8', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes' }
+
+cron={'tags': {'InstanceName': 'NDS-CYNC-PRE-PROD-Cron', 'deleteami': '1'},'noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-PRE-PROD-Cron', 'instanceType' : 'r4.large', 'autoScalingGroupName': 'NDS-CYNC-PRE-PROD-Cron-ASG' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'8', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes' }
+
+sidekiqsimilarity={'tags': {'InstanceName': 'NDS-CYNC-PRE-PROD-SidekiqSimilarity', 'deleteami': '1'},'noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-PRE-PROD-SidekiqSimilarity', 'instanceType' : 'm5.4xlarge', 'autoScalingGroupName': 'NDS-CYNC-PRE-PROD-Sidekiqsim-ASG' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'8', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes' }
+
+sidekiq={'tags': {'InstanceName': 'NDS-CYNC-PRE-PROD-Sidekiq', 'deleteami': '1'},'noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-PRE-PROD-Sidekiq', 'instanceType' : 'm5.2xlarge', 'autoScalingGroupName': 'NDS-CYNC-PRE-PROD-Sidekiq-ASG ' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'8', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes' }
+
+unicorn={'tags': {'InstanceName': 'NDS-CYNC-PRE-PROD-Unicorn', 'deleteami': '1'},'noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-PRE-PROD-Unicorn', 'instanceType' : 'r4.xlarge', 'autoScalingGroupName': 'NDS-CYNC-PRE-PROD-Unicorn-ASG' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'15', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes' }
+
+rorcash={'tags': {'InstanceName': '', 'deleteami': '1'},'noreboot': 'yes', 'tagState': 'green', 'tagName':'', 'instanceType' : 't3.medium', 'autoScalingGroupName': '' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'8', 'createlc':'0', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes' }
+
+
+ami_tags=[sidekiqsimilarity,sidekiq,cron,unicorn]
+ami_cash_tags=[rorcash]
+angular_ami_tags=[nginx]
+keyName=EnvName
+valueName=preprod
+
+statusMessage=success
+SourceArtifactBucket=dev-cync-artifacts
+#SourceArtifactAngularName=ngbuild_{{ angular_version }}.tar.gz
+#SourceArtifactName=cync_ror_{{ ror_version }}.tar.gz
+SourceArtifactTermloanName=termloan_angular_ngbuild_{{ termloan_angular_version }}.tar.gz
+DestinationArtifactBucket=nds-cync-pre-prod-artifacts
+count=10
+bucketname=nds-cync-pre-prod-artifacts
+
+[ror-hosts:vars]
+statusMessage=success
+rorArtifactBucketName=nds-cync-pre-prod-artifacts
+rorArtifactName=cync_ror_{{ ror_version }}.tar.gz
+configFileBucket=nds-cync-pre-prod-config
+databasefilename=pre-prod-database.yml
+cdnbucket=nds-cync-pre-prod-ror-cdn
+envname=preprod
+regionname=us-east-1
+
+
+[angular-hosts:vars]
+AngularArtifactBucketName=nds-cync-pre-prod-artifacts
+statusMessage=completed
+AngularArtifactName=ngbuild_{{ angular_version }}.tar.gz
+configureBucketName=nds-cync-pre-prod-config
+regionname=us-east-1
+angularPath=/opt/angular
+MaintenanceWindowBucket=nds-cync-pre-prod-config
+
+
+[angular-cash-hosts:vars]
+AngularCashArtifactBucketName=nds-cync-pre-prod-artifacts
+statusMessage=completed
+AngularCashArtifactName=cashapp_ngbuild_{{ cashapp_angular_version }}.tar.gz
+configureBucketName=nds-cync-pre-prod-config
+regionname=us-east-1
+MaintenanceWindowBucket=nds-cync-pre-prod-config
+
+[ror-cashapp-hosts:vars]
+rorArtifactBucketName=nds-cync-pre-prod-artifacts
+statusMessage=completed
+rorCashArtifactName=cync_cash_{{ cashapp_version  }}.tar.gz
+envname=preprod
+configFileBucket=nds-cync-pre-prod-config
+databasefilename=cash-database.yml
+regionname=us-east-1
+MaintenanceWindowBucket=nds-cync-pre-prod-config
+
+
+[ror-hosts:children]
+unicorn-hosts
+sidekiq-hosts
+cron-hosts
+sidekiq-similarity-hosts
+
+

@@ -1,0 +1,16 @@
+---
+- name: Downloading from Source Bucket
+  aws_s3:
+   bucket: "{{ SourceArtifactBucket }}"
+   object: "/reportwriter/{{ SourceArtifactName}}"
+   dest: /home/ubuntu/rw-angular.tar.gz
+   mode: get
+
+- name: Uploading to Destination Bucket
+  aws_s3:
+    bucket: "{{ DestinationArtifactBucket }}"
+    object: "/reportwriter/{{ SourceArtifactName}}"
+    src: /home/ubuntu/rw-angular.tar.gz
+    mode: put
+
+

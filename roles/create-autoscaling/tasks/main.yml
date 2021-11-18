@@ -1,0 +1,21 @@
+---
+- name: create Autoscaling Groups
+  ec2_asg:
+    name: "{{asgname}}"
+    load_balancers: "{{ elbname }}"
+    region: "{{ region }}"
+    availability_zones:
+      - "{{ zonea }}"
+      - "{{ zoneb }}"
+    launch_config_name: "{{item.name}}"
+    min_size: 1
+    max_size: 3
+    desired_capacity: 2
+    vpc_zone_identifier:
+      - "{{ subneta }}"
+      - "{{ subnetb}}"
+    tags:
+      - environment: "{{ envname }}"
+        propagate_at_launch: no
+  with_items: "{{lc_result.results}}"
+

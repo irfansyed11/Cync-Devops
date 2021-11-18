@@ -1,0 +1,21 @@
+---
+- name: Find EC2 Facts
+  ec2_remote_facts:
+    region: "{{ region }}"
+    filters:
+      instance-state-name: stopped
+      "tag:Name": "{{tagname}}"
+      "tag:State": "{{tagstate}}"
+  register: ec2_instances
+- name: create AMI
+  ec2_ami:
+    instance_id: "{{ item.id}}"
+    region: "{{ region }}"
+    wait: yes
+    name: "{{aminame}}" #Angular-AMI
+    tags:
+      #Name: angularami
+      service: amiservice
+  with_items: "{{ ec2_instances.instances }}"
+  register: ami_array
+

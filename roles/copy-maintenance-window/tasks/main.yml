@@ -1,0 +1,12 @@
+---
+- name: Copying maintenance page to nginx
+  aws_s3:
+    bucket: "{{ MaintenanceWindowBucket }}"
+    object: "/maintenance.html"
+    dest: "{{MaintenancePagePath}}" #/var/www/html/maintenance.html
+    mode: get
+
+- name: Set permissions for the file
+  file:
+    path: "{{ MaintenancePagePath }}"
+    mode: 0777

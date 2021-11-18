@@ -1,0 +1,36 @@
+---
+- name: Include vars from manifest.yaml
+  include_vars:
+    file: manifest.yaml
+    name: manifest
+
+- name: Include vars from all_service_current_running_version.yaml
+  include_vars:
+    file: all_service_current_running_version.yaml
+    name: all_service_info
+
+- name: last_successful_deployed_service list need to revert back
+  include_vars:
+    file: rollback_list.yaml
+    name: successful_deployed_service
+
+- debug:
+    msg: " revert content {{ successful_deployed_service}}"      
+
+- shell: ../scripts/mark_tag.sh "{{ ecr_source_aws_account }}" "{{ ecr_destination_aws_account }}" "{{ last_successful_deployed_service }}" "{{ manifest[last_successful_deployed_service].image }}" "{{ all_service_info[last_successful_deployed_service].version}}" "{{ env_name}}" 
+  register: tag_output
+
+- fail:
+    msg: "Tag change ecr service failed"
+  when: tag_output.stderr != ''
+
+- shell: ../scripts/find_and_stop_service.sh "{{ecs_cluster_name}}" "{{successful_deployed_service}}" # need to pass micro service name
+  register: stop_service_output
+  
+- fail:
+    msg: "Stop ecs service failed"
+  when: stop_service_output.stderr != ''
+
+- debug:
+    msg: "{{ tag_output.stdout_lines}}"    
+  with_dict: "{{ successful_deployed_service }}"

@@ -1,0 +1,68 @@
+---
+- name: create angular_term_loan_env directory example
+  file:
+    path: ~/angular_termloan_env
+    state: directory
+    mode: 0755
+- name: delete contents of termloan folder
+  shell: rm -rf "{{ termloanpath }}/*"
+  #command: rm -rf "{{ termloanpath }}/*"
+
+- name: download the artifact from s3 bucket
+  aws_s3:
+    bucket: "{{ AngularTermLoanArtifactBucketName }}"
+    object: "/termloan/{{ AngularTermLoanArtifactName }}"
+    dest: "{{ termloanpath }}/termloan_tar.gz" #~/ngbuild_tar.gz
+    mode: get
+- name: Download the environment configuration file from s3 bucket
+  aws_s3:
+    bucket: "{{ configureBucketName }}"
+    object: /termloan_env.json
+    dest: ~/angular_termloan_env/env.json
+    mode: get
+##- name: copy the artifact file to respective application folder
+  ##copy:
+    ##src: "{{ termloanpath }}/termloan_tar.gz" #~/ngbuild_tar.gz
+    ##dest: "{{ termloanpath  }}/termloan_tar.gz"  #"{{ angularpath  }}/ngbuild_tar.gz" #/opt/angular/ngbuild_tar.gz
+    ##remote_src: yes
+- name: Extract termloan angular build
+  unarchive:
+    src: "{{ termloanpath }}/termloan_tar.gz" #/opt/angular/ngbuild_tar.gz
+    dest: "{{ termloanpath }}"
+    remote_src: yes
+
+- name: Ensure directories are 0755
+  command: find "{{ termloanpath }}"/assets -type d -exec chmod 0755 {} \;
+
+- name: Ensure files are 0644
+  command: find "{{ termloanpath }}" -type f -exec chmod 0644 * {} \;
+
+- name: copy the configuration file to respective application folder
+  copy:
+    src: ~/angular_termloan_env/env.json
+    dest: "{{ termloanpath }}/assets/environment/env.json"
+    remote_src: yes
+#- name: Fetch env file to local
+  #fetch:
+    #src: "{{ termloanpath}}/assets/environment/env.json"
+    #dest: ~/angular_termloan_env/env.json
+    #flat: yes
+#- name: Get the ENV name
+  #set_fact:
+    #env_name: "{{ (lookup('file', '~/angular_termloan_env/env.json') | from_json).get('env') }}"
+#- name: Fetch config file to local
+  #fetch:
+    #src: "{{ termloanpath }}/assets/environment/config.{{env_name}}.json"
+    #dest: ~/angular_termloan_env/config.json
+    #flat: yes
+
+- name: delete the tar.gz file
+  file:
+    path: "{{ termloanpath }}/termloan_tar.gz"
+    state: absent
+
+#- name: restart nginx
+ # become: yes
+  #service:
+    #name: nginx
+    #state: restarted

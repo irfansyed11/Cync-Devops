@@ -1,0 +1,241 @@
+[tag_Name_NDS_CYNC_PRODSUPPORT_Ror]
+
+[tag_Name_NDS_CYNC_PRODSUPPORT_Cashapp_ROR]
+
+[tag_Name_NDS_CYNC_PRODSUPPORT_MCL]
+
+[tag_Name_NDS_CYNC_PRODSUPPORT_Factoring_Rails]
+
+[tag_Name_NDS_CYNC_PRODSUPPORT_Authapp]
+
+[tag_Name_NDS_CYNC_PRODSUPPORT_Factoring]
+
+[unicorn-hosts:children]
+tag_Name_NDS_CYNC_PRODSUPPORT_Ror
+
+[sidekiq-hosts:children]
+tag_Name_NDS_CYNC_PRODSUPPORT_Ror
+
+[cron-hosts:children]
+tag_Name_NDS_CYNC_PRODSUPPORT_Ror
+
+[angular-hosts:children]
+tag_Name_NDS_CYNC_PRODSUPPORT_Ror
+
+[angular-term-loan-hosts:children]
+tag_Name_NDS_CYNC_PRODSUPPORT_Ror
+
+[angular-abl-hosts:children]
+tag_Name_NDS_CYNC_PRODSUPPORT_Ror
+
+[ror-cashapp-hosts:children]
+tag_Name_NDS_CYNC_PRODSUPPORT_Cashapp_ROR
+
+[angular-cash-hosts:children]
+tag_Name_NDS_CYNC_PRODSUPPORT_Ror
+
+[multi-collateral-loan-hosts:children]
+tag_Name_NDS_CYNC_PRODSUPPORT_MCL
+
+[angular-term-loan-hosts:children]
+tag_Name_NDS_CYNC_PRODSUPPORT_Ror
+
+[angular-rw-hosts:children]
+tag_Name_NDS_CYNC_PRODSUPPORT_Ror
+
+[sidekiq-similarity-hosts]
+
+[factoring-unicorn-hosts:children]
+tag_Name_NDS_CYNC_PRODSUPPORT_Factoring
+
+[factoring-sidekiq-hosts:children]
+tag_Name_NDS_CYNC_PRODSUPPORT_Factoring
+
+[factoring-rails6-unicorn-hosts:children]
+tag_Name_NDS_CYNC_PRODSUPPORT_Factoring_Rails
+
+[factoring-rails6-sidekiq-hosts:children]
+tag_Name_NDS_CYNC_PRODSUPPORT_Factoring_Rails
+
+[authapp-unicorn-hosts:children]
+tag_Name_NDS_CYNC_PRODSUPPORT_Authapp
+
+
+[jumphost]
+localhost
+
+[jumphost:vars]
+
+amicount=450
+lccount=190
+snapcount=550
+count=10
+bucketname=staging-cync-artifacts
+regionname=us-east-1
+sns_region=us-east-1
+sns_topic=Prodsupport-Cync-Deployment-Notification
+envname=prodsupport
+aws_account_id=798793081579
+cronTag=NDS-CYNC-PRODSUPPORT-Ror
+ssm_Instanceid=i-0967a21d2c8913fa6
+ssm_workingdirectory=/home/ubuntu/cync-devops-ansible/jenkins_sh_files/jenkin_jobs_files/cync_qa_automation
+ssm_executiontimeout=14400
+ssm_CloudWatchLoggroupName=SsmRunCommandLog
+ssm_document_version=1
+ssm_timeout_seconds=30
+ssm_max_concurrency=50
+ssm_max_errors=0
+ssm_shfile=./generate_reports.sh
+qa_automation_trigger_required=no
+qa_automation_trigger_application_list=["Cync_Automation_ABL","Cync_FactoringAutomation_Project"]
+cyncInstance={'tags': '"Key"="Environment","Value"="PRODSUPPORT" "Key"="InstanceName","Value"="NDS-CYNC-PRODSUPPORT-Ror" "Key"="deleteami","Value"="1"','noreboot': 'no','tagState': 'green', 'tagName': 'NDS-CYNC-PRODSUPPORT-Ror', 'instanceType' : 'm5.xlarge', 'autoScalingGroupName': 'NDS-CYNC-PRODSUPPORT-ROR' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'12', 'createlc':'1','waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes', 'LtName':'NDS-CYNC-PRODSUPPORT-Ror-LT' }
+
+rorcash={'tags': {'InstanceName': 'NDS-CYNC-PRODSUPPORT-Cashapp-ROR', 'Environment': 'PRODSUPPORT', 'deleteami': '1'},'noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-PRODSUPPORT-Cashapp-ROR', 'instanceType' : 't3.xlarge', 'autoScalingGroupName': '' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'12', 'createlc':'0', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes' }
+
+multiloan={'tags': '"Key"="Environment","Value"="PRODSUPPORT" "Key"="InstanceName","Value"="NDS-CYNC-PRODSUPPORT-MCL" "Key"="deleteami","Value"="1"','noreboot': 'no', 'tagState': 'green', 'tagName':'NDS-CYNC-PRODSUPPORT-MCL', 'instanceType' : 't3.xlarge', 'autoScalingGroupName': 'NDS-CYNC-PRODSUPPORT-MCL-sg' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'12', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes', 'metricscollection':'yes', 'LtName':'NDS-CYNC-PRODSUPPORT-MCL-LT' }
+
+FactoringAppror={'tags': {'InstanceName': 'NDS-CYNC-PRODSUPPORT-Factoring', 'Environment': 'PRODSUPPORT', 'deleteami': '1'},'noreboot': 'no', 'tagState': 'green', 'tagName':'NDS-CYNC-PRODSUPPORT-Factoring', 'instanceType' : 'm5.large', 'autoScalingGroupName': 'NDS-CYNC-PRODSUPPORT-Factoring' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'12', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes', 'metricscollection':'yes', 'LtName':'NDS-CYNC-PRODSUPPORT-Factoring-LT' }
+
+AuthAppror={'tags': '"Key"="Environment","Value"="PRODSUPPORT" "Key"="InstanceName","Value"="NDS-CYNC-PRODSUPPORT-Authapp" "Key"="deleteami","Value"="1"','noreboot': 'no', 'tagState': 'green', 'tagName':'NDS-CYNC-PRODSUPPORT-Authapp', 'instanceType' : 't3.large', 'autoScalingGroupName': 'NDS-CYNC-PRODSUPPORT-Authapp' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'12', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes', 'metricscollection':'yes', 'LtName':'NDS-CYNC-PRODSUPPORT-Authapp-LT' }
+
+FactoringRorRails6={'tags': '"Key"="Environment","Value"="PRODSUPPORT" "Key"="InstanceName","Value"="NDS-CYNC-PRODSUPPORT-Factoring-Rails" "Key"="deleteami","Value"="1"','noreboot': 'no', 'tagState': 'green', 'tagName':'NDS-CYNC-PRODSUPPORT-Factoring-Rails', 'instanceType' : 'm5.large', 'autoScalingGroupName': 'NDS-CYNC-PRODSUPPORT-Factoring-Rails' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'12', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes', 'metricscollection':'yes', 'LtName':'NDS-CYNC-PRODSUPPORT-Factoring-Rails-LT' }
+
+ami_multiloan_tags=["{{multiloan}}"]
+
+ami_tags=["{{cyncInstance}}"]
+ami_cash_tags=["{{rorcash}}"]
+angular_ami_tags=["{{ cyncInstance }}"]
+ami_abl_angular_tags=["{{cyncInstance}}"]
+ami_FactoringApp_tags=["{{FactoringAppror}}"]
+ami_AuthApp_tags=["{{AuthAppror}}"]
+ami_FactoringRails6_tags=["{{FactoringRorRails6}}"]
+
+keyName=EnvName
+valueName=prodsupport
+statusMessage=success
+SourceArtifactBucket=staging-cync-artifacts
+SourceArtifactAngularName=ngbuild_{{ angular_version }}.tar.gz
+SourceArtifactTermloanName=termloan_angular_ngbuild_{{ termloan_angular_version }}.tar.gz
+SourceArtifactName=cync_ror_{{ ror_version }}.tar.gz
+DestinationArtifactBucket=staging-cync-artifacts
+SourceABLArtifactBucket=staging-cync-artifacts
+SourceABLArtifactName=abl_angular_ngbuild_{{ abl_angular_version }}.tar.gz
+DestinationABLArtifactBucket=staging-cync-artifacts
+SourceAuthAppArtifactBucket=staging-cync-artifacts
+SourceArtifactAuthAppName=cync_auth_app_ror_{{ authapp_ror_version }}.tar.gz
+SourceFactoring-AppArtifactBucket=staging-cync-artifacts
+SourceArtifactFactoring-AppName=cync_factoring_app_ror_{{ factoring_ror_version }}.tar.gz
+DestinationAuthAppArtifactBucket=staging-cync-artifacts
+DestinationFactoring-AppArtifactBucket=staging-cync-artifacts
+
+[ror-hosts:vars]
+rorArtifactBucketName=staging-cync-artifacts
+rorArtifactName=cync_ror_{{ ror_version }}.tar.gz
+configFileBucket=prodsupport-cync-config
+databasefilename=database.yml
+cdnbucket=staging-cync-cdn
+envname=prodsupport
+regionname=us-east-1
+
+[factoring-hosts:vars]
+statusMessage=success
+rorArtifactBucketName=staging-cync-artifacts
+rorArtifactName=cync_factoring_app_ror_{{ factoring_ror_version }}.tar.gz
+configFileBucket=prodsupport-cync-config
+databasefilename=database.yml
+cdnbucket=staging-cync-cdn
+envname=prodsupport
+regionname=us-east-1
+
+[factoring-rails6-hosts:vars]
+statusMessage=success
+rorArtifactBucketName=staging-cync-artifacts
+rorArtifactName=cync_factoring_app_ror_{{ factoring_ror6_version }}.tar.gz
+configFileBucket=prodsupport-cync-config
+databasefilename=database.yml
+cdnbucket=staging-cync-cdn
+envname=prodsupport
+regionname=us-east-1
+
+[authapp-unicorn-hosts:vars]
+statusMessage=success
+rorArtifactBucketName=staging-cync-artifacts
+rorArtifactName=cync_auth_app_ror_{{ authapp_ror_version }}.tar.gz
+configFileBucket=prodsupport-cync-config
+databasefilename=database.yml
+cdnbucket=staging-cync-cdn
+envname=prodsupport
+regionname=us-east-1
+
+[angular-hosts:vars]
+AngularArtifactBucketName=staging-cync-artifacts
+statusMessage=success
+AngularArtifactName=ngbuild_{{ angular_version }}.tar.gz
+configureBucketName=prodsupport-cync-config
+regionname=us-east-1
+angularPath=/opt/angular
+MaintenanceWindowBucket=prodsupport-cync-config
+
+[angular-abl-hosts:vars]
+ablangularPath=/opt/abl-application-angular
+AngularAblArtifactBucketName=staging-cync-artifacts
+AngularAblArtifactName=abl_angular_ngbuild_{{ abl_angular_version }}.tar.gz
+statusMessage=completed
+regionname=us-east-1
+configureBucketName=prodsupport-cync-config
+
+[angular-term-loan-hosts:vars]
+AngularTermLoanArtifactBucketName=staging-cync-artifacts
+statusMessage=success
+AngularTermLoanArtifactName=termloan_angular_ngbuild_{{ termloan_angular_version }}.tar.gz
+configureBucketName=prodsupport-cync-config
+regionname=us-east-1
+termloanpath=/opt/term-loan
+
+[angular-cash-hosts:vars]
+cashangularPath=/opt/cash-application-angular
+AngularCashArtifactBucketName=staging-cync-artifacts
+AngularCashArtifactName=cashapp_ngbuild_{{ cashapp_angular_version }}.tar.gz
+statusMessage=completed
+configureBucketName=prodsupport-cync-config
+regionname=us-east-1
+
+[multi-collateral-loan-hosts:vars]
+rorArtifactBucketName=staging-cync-artifacts
+multiloanrorArtifactName=cync_multi_collateral_{{ multiloanror_version }}.tar.gz
+envname=prodsupport
+configFileBucket=prodsupport-cync-config
+databasefilename=multiloan_database.yml
+adminDBfilename=mcl_ror_admin_db.yml
+regionname=us-east-1
+statusMessage=success
+
+[ror-cashapp-hosts:vars]
+rorArtifactBucketName=prodsupport-cync-artifacts
+rorCashArtifactName=cync_cash_{{ cashapp_version }}.tar.gz
+envname=prodsupport
+configFileBucket=prodsupport-cync-config
+databasefilename=cash-database.yml
+adminDBfilename=cashapp_ror_admin_db.yml
+regionname=us-east-1
+statusMessage=success
+
+[angular-rw-hosts:vars]
+AngularRWArtifactBucketName=staging-cync-artifacts
+statusMessage=completed
+configureBucketName=prodsupport-cync-config
+rwangularPath=/opt/insights
+AngularRWArtifactName=rw_ngbuild_{{ rw_angular_version }}.tar.gz
+
+[ror-hosts:children]
+unicorn-hosts
+sidekiq-hosts
+cron-hosts
+
+[factoring-hosts:children]
+factoring-unicorn-hosts
+factoring-sidekiq-hosts
+
+[factoring-rails6-hosts:children]
+factoring-rails6-unicorn-hosts
+factoring-rails6-sidekiq-hosts

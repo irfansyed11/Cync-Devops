@@ -1,0 +1,9 @@
+---
+- name: Putting MW
+  block:
+  - name: Put MW on uptimerobot
+    when: uptimerobot_required is defined and uptimerobot_required == "Yes"
+    script: ../jenkins_sh_files/datadog-uptimerobot-sh-files/uptime_robot.sh "{{uptimerobot_mw_duration}}" "{{uptimerobot_filter_with}}" "{{envname}}" "{{app_name}}"
+    register: script_output
+  #- debug:
+  #   var: script_output

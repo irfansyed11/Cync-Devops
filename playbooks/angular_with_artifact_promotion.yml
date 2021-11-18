@@ -1,0 +1,129 @@
+---
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  roles:
+    - { role: ../roles/send-sns-notification, status: started }
+
+#- hosts: angular-hosts
+  #gather_facts: false
+  #remote_user: ubuntu
+  #tasks:
+  #- name: Block to copy maintenance window page
+    #block:
+    #- include_role:
+        #name: ../roles/copy-maintenance-window
+    #rescue:
+      #- set_fact:
+          #statusMessage: "failed"
+
+  #- name: End the play if maintenance page copy fails.
+    #block:
+    #- fail: msg="Deployment failed while copying maintenance window page."
+      #with_items: "{{ groups['angular-hosts'] }}"
+      #when: hostvars[item].statusMessage == "failed"
+
+- hosts: jumphost
+  connection: local
+  remote_user: ubuntu
+  tasks:
+  - name: Block to copy angular artifacts
+    block:
+    - include_role:
+        name: ../roles/copyangular
+    #ignore_errors: true
+    rescue:
+      - include_role:
+          name: ../roles/send-sns-notification
+        vars:
+          status: failed copy angular artifacts
+      - fail:
+          msg: 'Copy Angular Artifacts failed'
+
+  # - name: Block to tag s3 artifacts
+  #   block:
+  #   - include_role:
+  #       name: ../roles/s3tags
+  #   #ignore_errors: true
+  #   rescue:
+  #     - include_role:
+  #         name: ../roles/send-sns-notification
+  #       vars:
+  #         status: failed tagging s3 artifacts
+  #     - fail:
+  #         msg : 'S3 tagging artifacts failed'
+
+- hosts: angular-hosts
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block for angular deployment
+    block:
+    - include_role:
+        name: ../roles/angular
+    #ignore_errors: true
+    rescue:
+      - set_fact:
+          statusMessage: "failed"
+
+#- hosts: angular-hosts
+  #gather_facts: false
+  #remote_user: ubuntu
+  #tasks:
+  #- name: Block to remove maintenance window page
+    #block:
+    #- include_role:
+        #name: ../roles/remove-maintenance-window
+    #rescue:
+      #- set_fact:
+          #statusMessage: "failed"
+
+  #- name: End the play if maintenance page removal fails.
+    #block:
+    #- fail: msg="Deployment failed while deleting maintenance window page."
+      #with_items: "{{ groups['angular-hosts'] }}"
+      #when: hostvars[item].statusMessage == "failed"
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to send angular deployment notification
+    block:
+    - include_role:
+        name: ../roles/send-sns-notification
+      vars:
+        status: failed angular deployment
+      with_items: "{{ groups['angular-hosts'] }}"
+      when: hostvars[item].statusMessage == "failed"
+
+  - name: End the play if deployment fails
+    block:
+    - fail: msg="Angular deployment failed"
+      with_items: "{{ groups['angular-hosts'] }}"
+      when: hostvars[item].statusMessage == "failed"
+    
+  - name: Block to create AMI, LC and ASG
+    block:
+    - include_role:
+         name: ../roles/create-ami-lc-updateasg
+      with_items: "{{ angular_ami_tags }}"
+    #ignore_errors: true
+    rescue:
+      - include_role:
+          name: ../roles/send-sns-notification
+        vars:
+          status: failed creating ami/lc/asg
+      - fail:
+          msg: 'Failed to create the AMI/LC/ASG'
+
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  roles:
+    - role: ../roles/send-sns-notification
+      status: success

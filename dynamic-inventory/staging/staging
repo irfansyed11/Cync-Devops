@@ -1,0 +1,314 @@
+[tag_Name_NDS_CYNC_STAGING_Cron]
+
+[tag_Name_NDS_CYNC_STAGING_Authapp]
+
+[tag_Name_NDS_CYNC_STAGING_ROR_Factoring]
+
+[tag_Name_NDS_CYNC_STAGING_Factoring_Sidekiq]
+
+[tag_Name_NDS_CYNC_STAGING_MC_Loan_SRVR]
+
+[tag_Name_NDS_CYNC_STAGING_Nginx]
+
+[tag_Name_NDS_CYNC_STAGING_Sidekiq]
+
+[tag_Name_NDS_CYNC_STAGING_Unicorn]
+
+[tag_Name_NDS_CYNC_Staging_Passenger]
+
+[tag_Name_NDS_CYNC_STAGING_Sidekiq_Similarity]
+
+[tag_Name_NDS_CYNC_STAGING_ML_APAR]
+
+[tag_Name_NDS_CYNC_STAGING_Factoring_Rails]
+
+[tag_Name_NDS_CYNC_STAGING_Factoring_Sidekiq_Rails]
+
+[unicorn-hosts:children]
+tag_Name_NDS_CYNC_STAGING_Unicorn
+
+[sidekiq-hosts:children]
+tag_Name_NDS_CYNC_STAGING_Sidekiq
+
+[cron-hosts:children]
+tag_Name_NDS_CYNC_STAGING_Cron
+
+[factoring-unicorn-hosts:children]
+tag_Name_NDS_CYNC_STAGING_ROR_Factoring
+
+[factoring-sidekiq-hosts:children]
+tag_Name_NDS_CYNC_STAGING_Factoring_Sidekiq
+
+[factoring-rails6-unicorn-hosts:children]
+tag_Name_NDS_CYNC_STAGING_Factoring_Rails
+
+[factoring-rails6-sidekiq-hosts:children]
+tag_Name_NDS_CYNC_STAGING_Factoring_Sidekiq_Rails
+
+[authapp-unicorn-hosts:children]
+tag_Name_NDS_CYNC_STAGING_Authapp
+
+[angular-hosts:children]
+tag_Name_NDS_CYNC_STAGING_Nginx
+
+[angular-abl-hosts:children]
+tag_Name_NDS_CYNC_STAGING_Nginx
+
+[angular-rw-hosts:children]
+tag_Name_NDS_CYNC_STAGING_Nginx
+
+[ror-cashapp-hosts:children]
+tag_Name_NDS_CYNC_Staging_Passenger
+
+[angular-cash-hosts:children]
+tag_Name_NDS_CYNC_STAGING_Nginx
+
+[angular-term-loan-hosts:children]
+tag_Name_NDS_CYNC_STAGING_Nginx
+
+[multi-collateral-loan-hosts:children]
+tag_Name_NDS_CYNC_STAGING_MC_Loan_SRVR 
+
+[sidekiq-similarity-hosts:children]
+tag_Name_NDS_CYNC_STAGING_Sidekiq_Similarity
+
+[ml-apar-hosts:children]
+tag_Name_NDS_CYNC_STAGING_ML_APAR
+
+[webhelp-hosts:children]
+tag_Name_NDS_CYNC_STAGING_Nginx
+
+[jumphost]
+localhost
+
+[jumphost:vars]
+amicount=450
+lccount=190
+snapcount=550
+count=10
+bucketName=staging-cync-artifacts
+sns_region=us-east-1
+sns_topic=Cync-Deployment-Notification
+envname=staging
+aws_account_id=798793081579
+regionname=us-east-1
+cloud_watch_rule_name_lists="NDS-CYNC-STAGING-Monarch-Lambda-Notification NDS-CYNC-STAGING-Auto-Loan-File-Missing-Rule NDS-CYNC-Staging-canadian-prime-rate-Rule NDS-CYNC-STAGING-Prime-Libor-Rate-Rule"
+sidekiqSimilarityTag=NDS-CYNC-STAGING-Sidekiq-Similarity
+cronTag=NDS-CYNC-STAGING-Cron
+uptimerobot_filter_with="NDS-CYNC-STAGING"
+uptimerobot_mw_duration=15
+uptimerobot_required="Yes"
+ssm_Instanceid=i-0967a21d2c8913fa6
+ssm_workingdirectory=/home/ubuntu/cync-devops-ansible/jenkins_sh_files/jenkin_jobs_files/cync_qa_automation
+ssm_executiontimeout=14400
+ssm_CloudWatchLoggroupName=SsmRunCommandLog
+ssm_document_version=1
+ssm_timeout_seconds=30
+ssm_max_concurrency=50
+ssm_max_errors=0
+ssm_shfile=./generate_reports.sh
+qa_automation_trigger_required=false
+qa_automation_trigger_application_list=["Cync_Automation_ABL"]
+nginx={'tags': '"Key"="Environment","Value"="STAGING" "Key"="InstanceName","Value"="NDS-CYNC-STAGING-Nginx" "Key"="deleteami","Value"="1"','noreboot': 'no', 'tagState': 'green', 'tagName':'NDS-CYNC-STAGING-Nginx', 'instanceType' : 't3.medium', 'autoScalingGroupName': 'NDS-CYNC-STAGING-Nginx' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'15', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes', 'LtName':'NDS-CYNC-STAGING-Nginx-LT' }
+
+cron={'tags': '"Key"="Environment","Value"="STAGING" "Key"="InstanceName","Value"="NDS-CYNC-STAGING-Cron" "Key"="deleteami","Value"="1"','noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-STAGING-Cron', 'instanceType' : '', 'autoScalingGroupName': '' ,'devicename': '' ,'devicetype': '' ,'size':'15', 'createlc':'0', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes' , 'metricscollection':'yes'}
+
+sidekiqsimilarity={'tags': '"Key"="Environment","Value"="STAGING" "Key"="InstanceName","Value"="NDS-CYNC-STAGING-Sidekiq-Similarity" "Key"="deleteami","Value"="1"','noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-STAGING-Sidekiq-Similarity', 'instanceType' : 'm5.xlarge', 'autoScalingGroupName': 'CYNC-Staging-Sidekiq-Similarity' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'12', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes', 'metricscollection':'yes', 'LtName':'NDS-CYNC-STAGING-Sidekiq-Similarity-LT' }
+
+sidekiq={'tags': '"Key"="Environment","Value"="STAGING" "Key"="InstanceName","Value"="NDS-CYNC-STAGING-Sidekiq" "Key"="deleteami","Value"="1"','noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-STAGING-Sidekiq', 'instanceType' : 'm5.2xlarge', 'autoScalingGroupName': 'NDS-CYNC-STAGING-Sidekiq' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'20', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes', 'metricscollection':'yes', 'LtName':'NDS-CYNC-STAGING-Sidekiq-LT' }
+
+unicorn={'tags': '"Key"="Environment","Value"="STAGING" "Key"="InstanceName","Value"="NDS-CYNC-STAGING-Unicorn" "Key"="deleteami","Value"="1"','noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-STAGING-Unicorn', 'instanceType' : 'm5.xlarge', 'autoScalingGroupName': 'NDS-CYNC-STAGING-Unicorn' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'20', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes', 'metricscollection':'yes', 'LtName':'NDS-CYNC-STAGING-Unicorn-LT' }
+
+rorcash={'tags': {'InstanceName': 'NDS-CYNC-Staging-Passenger', 'Environment': 'STAGING', 'deleteami': '1'},'noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-Staging-Passenger', 'instanceType' : 't3.medium', 'autoScalingGroupName': 'NDS-CYNC-Staging-Passenger' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'8', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes', 'metricscollection':'yes' }
+
+multiloan={'tags': '"Key"="Environment","Value"="STAGING" "Key"="InstanceName","Value"="NDS-CYNC-STAGING-MC-Loan-SRVR" "Key"="deleteami","Value"="1"','noreboot': 'no', 'tagState': 'green', 'tagName':'NDS-CYNC-STAGING-MC-Loan-SRVR', 'instanceType' : 't3.xlarge', 'autoScalingGroupName': 'NDS-CYNC-STAGING-MC-Loan-ASG' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'15', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes', 'metricscollection':'yes', 'LtName':'NDS-CYNC-STAGING-MCL-LT' }
+FactoringAppror={'tags': {'InstanceName': 'NDS-CYNC-STAGING-ROR-Factoring', 'Environment': 'STAGING', 'deleteami': '1'},'noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-STAGING-ROR-Factoring', 'instanceType' : 'm5.large', 'autoScalingGroupName': 'NDS-CYNC-STAGING-ROR-Factoring' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'15', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes', 'LtName':'NDS-CYNC-STAGING-Factoring-LT' }
+
+FactoringSidekiq={'tags': {'InstanceName': 'NDS-CYNC-STAGING-Factoring-Sidekiq', 'Environment': 'STAGING', 'deleteami': '1'},'noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-STAGING-Factoring-Sidekiq', 'instanceType' : 'm5.large', 'autoScalingGroupName': 'NDS-CYNC-STAGING-Factoring-Sidekiq' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'15', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes', 'LtName':'NDS-CYNC-STAGING-Factoring-Sidekiq-LT' }
+
+FactoringRails6={'tags': '"Key"="Environment","Value"="STAGING" "Key"="InstanceName","Value"="NDS-CYNC-STAGING-Factoring-Rails" "Key"="deleteami","Value"="1"','noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-STAGING-Factoring-Rails', 'instanceType' : 'm5.large', 'autoScalingGroupName': 'NDS-CYNC-STAGING-Factoring-Rails' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'15', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes', 'LtName':'NDS-CYNC-STAGING-Factoring-Rails-LT' }
+
+FactoringRails6Sidekiq={'tags': '"Key"="Environment","Value"="STAGING" "Key"="InstanceName","Value"="NDS-CYNC-STAGING-Factoring-Sidekiq-Rails" "Key"="deleteami","Value"="1"','noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-STAGING-Factoring-Sidekiq-Rails', 'instanceType' : 'm5.large', 'autoScalingGroupName': 'NDS-CYNC-STAGING-Factoring-Sidekiq-Rails' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'15', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes', 'LtName':'NDS-CYNC-STAGING-Factoring-Sidekiq-Rails-LT' }
+
+
+AuthAppror={'tags': '"Key"="Environment","Value"="STAGING" "Key"="InstanceName","Value"="NDS-CYNC-STAGING-Authapp" "Key"="deleteami","Value"="1"','noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-STAGING-Authapp', 'instanceType' : 't3.large', 'autoScalingGroupName': 'NDS-CYNC-STAGING-Authapp' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'15', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes', 'LtName':'NDS-CYNC-STAGING-Authapp-LT' }
+
+mlapar={'tags': '"Key"="Environment","Value"="STAGING" "Key"="InstanceName","Value"="NDS-CYNC-STAGING-ML-APAR" "Key"="deleteami","Value"="1"','noreboot': 'no', 'tagState': 'green', 'tagName':'NDS-CYNC-STAGING-ML-APAR', 'instanceType' : 'c5.xlarge', 'autoScalingGroupName': 'NDS-CYNC-STAGING-ML-APAR' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'12', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes', 'LtName':'NDS-CYNC-STAGING-ML-APAR-LT' }
+
+ami_multiloan_tags=["{{multiloan}}"]
+#order should not be changed for base ror ami variable in inventory of staging and automation environments
+ami_tags=["{{sidekiq}}","{{sidekiqsimilarity}}","{{cron}}","{{unicorn}}"]
+ami_cash_tags=["{{rorcash}}"]
+angular_ami_tags=["{{nginx}}"]
+ami_FactoringApp_tags=["{{FactoringAppror}}","{{FactoringSidekiq}}"]
+ami_FactoringRails6_tags=["{{FactoringRails6}}","{{FactoringRails6Sidekiq}}"]
+ami_AuthApp_tags=["{{AuthAppror}}"]
+ami_ml_apar_tags=["{{mlapar}}"]
+ami_abl_angular_tags=["{{nginx}}"]
+ami_webhelp_tags=["{{nginx}}"]
+ami_base_unicorn_tags=["{{unicorn}}"]
+keyName=EnvName
+valueName=staging
+
+statusMessage=success
+SourceArtifactBucket=dev-cync-artifacts
+SourceArtifactTermloanName=termloan_angular_ngbuild_{{ termloan_angular_version }}.tar.gz
+DestinationArtifactBucket=staging-cync-artifacts
+SourceMulticollateralArtifactBucket=nds-cync-dev-multi-collateral-loan-artifacts
+SourceArtifactMulticollateralName=cync_multi_collateral_{{ multiloanror_version }}.tar.gz
+SourceAuthAppArtifactBucket=dev-cync-artifacts
+SourceArtifactAuthAppName=cync_auth_app_ror_{{ authapp_ror_version }}.tar.gz
+SourceFactoring-AppArtifactBucket=dev-cync-artifacts
+SourceArtifactFactoring-AppName=cync_factoring_app_ror_{{ factoring_ror_version }}.tar.gz
+SourcemlaparArtifactBucket=staging-cync-artifacts
+SourcemlaparArtifactName=ml_apar_{{ ml_apar_version }}.tar.gz
+SourceABLArtifactBucket=dev-cync-artifacts
+SourceABLArtifactName=abl_angular_ngbuild_{{ abl_angular_version }}.tar.gz
+DestinationABLArtifactBucket=staging-cync-artifacts
+DestinationmlaparArtifactBucket=staging-cync-artifacts
+DestinationAuthAppArtifactBucket=staging-cync-artifacts
+DestinationFactoring-AppArtifactBucket=staging-cync-artifacts
+DestinationMulticollateralArtifactBucket=staging-cync-artifacts
+count=10
+bucketname=staging-cync-artifacts
+
+[ror-hosts:vars]
+statusMessage=success
+rorArtifactBucketName=staging-cync-artifacts
+rorArtifactName=cync_ror_{{ ror_version }}.tar.gz
+configFileBucket=staging-config-bucket
+databasefilename=database.yml
+cdnbucket=staging-cync-cdn
+envname=staging
+regionname=us-east-1
+mapping_path=/home/ubuntu
+ARTIFACT_S3_FOLDER=cync
+
+[factoring-hosts:vars]
+statusMessage=success
+rorArtifactBucketName=staging-cync-artifacts
+rorArtifactName=cync_factoring_app_ror_{{ factoring_ror_version }}.tar.gz
+configFileBucket=staging-config-bucket
+databasefilename=database.yml
+cdnbucket=staging-cync-cdn
+envname=staging
+regionname=us-east-1
+
+[factoring-rails6-hosts:vars]
+statusMessage=success
+rorArtifactBucketName=staging-cync-artifacts
+rorArtifactName=cync_factoring_app_ror_{{ factoring_ror6_version }}.tar.gz
+configFileBucket=staging-config-bucket
+databasefilename=database.yml
+cdnbucket=staging-cync-cdn
+envname=staging
+regionname=us-east-1
+
+[authapp-unicorn-hosts:vars]
+statusMessage=success
+rorArtifactBucketName=staging-cync-artifacts
+rorArtifactName=cync_auth_app_ror_{{ authapp_ror_version }}.tar.gz
+configFileBucket=staging-config-bucket
+databasefilename=database.yml
+cdnbucket=staging-cync-cdn
+envname=staging
+regionname=us-east-1
+
+[ml-apar-hosts:vars]
+statusMessage=success
+APARArtifactBucketName=staging-cync-artifacts
+APARArtifactName=ml_apar_{{ ml_apar_version }}.tar.gz
+envname=staging
+regionname=us-east-1
+
+[multi-collateral-loan-hosts:vars]
+rorArtifactBucketName=staging-cync-artifacts
+multiloanrorArtifactName=cync_multi_collateral_{{ multiloanror_version }}.tar.gz
+envname=staging
+configFileBucket=staging-config-bucket
+databasefilename=multiloan_database.yml
+adminDBfilename=mcl_ror_admin_db.yml
+regionname=us-east-1
+statusMessage=success
+
+[angular-hosts:vars]
+AngularArtifactBucketName=staging-cync-artifacts
+statusMessage=completed
+AngularArtifactName=ngbuild_{{ angular_version }}.tar.gz
+configureBucketName=staging-config-bucket
+regionname=us-east-1
+angularPath=/opt/angular
+MaintenanceWindowBucket=staging-config-bucket
+
+[angular-abl-hosts:vars]
+ablangularPath=/opt/abl-application-angular
+AngularAblArtifactBucketName=staging-cync-artifacts
+AngularAblArtifactName=abl_angular_ngbuild_{{ abl_angular_version }}.tar.gz
+statusMessage=completed
+regionname=us-east-1
+configureBucketName=staging-config-bucket
+
+[angular-term-loan-hosts:vars]
+AngularTermLoanArtifactBucketName=staging-cync-artifacts
+statusMessage=success
+AngularTermLoanArtifactName=termloan_angular_ngbuild_{{ termloan_angular_version }}.tar.gz
+configureBucketName=staging-config-bucket
+regionname=us-east-1
+termloanpath=/opt/term-loan
+
+
+[angular-cash-hosts:vars]
+cashangularPath=/opt/cash-application-angular
+AngularCashArtifactBucketName=staging-cync-artifacts
+statusMessage=completed
+AngularCashArtifactName=cashapp_ngbuild_{{ cashapp_angular_version }}.tar.gz
+configureBucketName=staging-config-bucket
+regionname=us-east-1
+MaintenanceWindowBucket=staging-config-bucket
+
+[ror-cashapp-hosts:vars]
+rorArtifactBucketName=staging-cync-artifacts
+statusMessage=completed
+rorCashArtifactName=cync_cash_{{ cashapp_version  }}.tar.gz
+envname=staging
+configFileBucket=staging-config-bucket
+databasefilename=cash-database.yml
+adminDBfilename=cashapp_ror_admin_db.yml
+regionname=us-east-1
+MaintenanceWindowBucket=staging-config-bucket
+
+[webhelp-hosts:vars]
+WebhelpArtifactBucketName=staging-cync-artifacts
+statusMessage=completed
+WebhelpArtifactName=content_webhelp_{{ webhelp_version }}.tar.gz
+configureBucketName=staging-config-bucket
+regionname=us-east-1
+webhelpPath=/opt/web-help
+
+[ror-hosts:children]
+unicorn-hosts
+sidekiq-hosts
+cron-hosts
+sidekiq-similarity-hosts
+
+[angular-rw-hosts:vars]
+AngularRWArtifactBucketName=staging-cync-artifacts
+statusMessage=completed
+configureBucketName=staging-config-bucket
+rwangularPath=/opt/insights
+regionname=us-east-1
+AngularRWArtifactName=rw_ngbuild_{{ rw_angular_version }}.tar.gz
+
+[ror-hosts:children]
+unicorn-hosts
+sidekiq-hosts
+cron-hosts
+sidekiq-similarity-hosts
+
+[factoring-hosts:children]
+factoring-unicorn-hosts
+factoring-sidekiq-hosts
+
+[factoring-rails6-hosts:children]
+factoring-rails6-unicorn-hosts
+factoring-rails6-sidekiq-hosts

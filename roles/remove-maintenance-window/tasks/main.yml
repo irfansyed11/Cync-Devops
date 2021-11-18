@@ -1,0 +1,5 @@
+---
+- name: Removing maintenance page from nginx
+  file:
+    state: absent
+    path: "{{MaintenancePagePath}}" #"/var/www/html/maintenance.html"

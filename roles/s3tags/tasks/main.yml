@@ -1,0 +1,26 @@
+---
+- name: Add to Tagname object for ROR
+  vars:
+    objectName: "cync/cync_ror_{{ ror_version }}.tar.gz"
+  command: python ./tags.py {{ bucketName }} {{ objectName }}  {{ keyName }} {{ valueName }}
+  args:
+    chdir: "{{ role_path }}/files"
+  delegate_to: localhost
+  run_once: True
+  when: ror_version is defined
+  register: show_result
+
+- name: Add to Tagname object for Angular
+  vars:
+    objectName: "cync/ngbuild_{{ angular_version }}.tar.gz"
+  command: python ./tags.py {{ bucketName }} {{ objectName }}  {{ keyName }} {{ valueName }}
+  args:
+    chdir: "{{ role_path }}/files"
+  delegate_to: localhost
+  run_once: True
+  when: angular_version is defined
+  register: show_result
+
+- name: Output
+  debug:
+    var: show_result.stdout

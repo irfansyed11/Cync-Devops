@@ -1,0 +1,14 @@
+---
+- name: Downloading from Source Bucket
+  aws_s3:
+   bucket: "{{ SourceAuthAppArtifactBucket }}"
+   object: "/cync-auth-app/{{ SourceArtifactAuthAppName}}"
+   dest: /home/ubuntu/auth-app.tar.gz
+   mode: get
+
+- name: Uploading to Destination Bucket
+  aws_s3:
+   bucket: "{{ DestinationAuthAppArtifactBucket }}"
+   object: "/cync-auth-app/{{ SourceArtifactAuthAppName }}"
+   src: /home/ubuntu/auth-app.tar.gz
+   mode: put

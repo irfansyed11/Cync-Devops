@@ -1,0 +1,64 @@
+---
+- hosts: jumphost
+  connection: local
+  gather_facts: true
+  remote_user: ubuntu
+  tasks:
+  - name: delete contents of journal folder
+    block:
+    - include_role:
+        name: ../roles/journal
+
+        #- hosts: ror-hosts
+        #gather_facts: true
+        #remote_user: ubuntu
+        #tasks:
+        #- name: delete contents of journal folder
+        #block:
+        #- include_role:
+        #name: ../roles/journal
+
+- hosts: authapp-unicorn-hosts
+  gather_facts: true
+  remote_user: ubuntu
+  tasks:
+  - name: delete contents of journal folder
+    block:
+    - include_role:
+        name: ../roles/journal
+
+- hosts: factoring-rails6-hosts
+  gather_facts: true
+  remote_user: ubuntu
+  tasks:
+  - name: delete contents of journal folder
+    block:
+    - include_role:
+        name: ../roles/journal
+
+- hosts: multi-collateral-loan-hosts
+  gather_facts: true
+  remote_user: ubuntu
+  tasks:
+  - name: delete contents of journal folder
+    block:
+    - include_role:
+        name: ../roles/journal
+
+- hosts: angular-hosts
+  gather_facts: true
+  remote_user: ubuntu
+  tasks:
+  - name: delete contents of journal folder
+    block:
+    - include_role:
+        name: ../roles/journal
+
+- hosts: ml-apar-hosts
+  gather_facts: true
+  remote_user: ubuntu
+  tasks:
+  - name: delete contents of journal folder
+    block:
+    - include_role:
+        name: ../roles/journal

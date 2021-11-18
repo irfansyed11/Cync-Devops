@@ -1,0 +1,28 @@
+- name: Finding latest mapping artifact
+  when: inventory_hostname in groups['unicorn-hosts']
+  command: bash -lc 'aws s3 ls {{ rorArtifactBucketName }}/{{ ARTIFACT_S3_FOLDER }}/mapping --recursive | sort | tail -n 1 | awk "{print $4}" | tr "/" "\n" | grep "mapping"'
+  register: mapping_file_artifact
+
+
+- name: downloading mapping artifact
+  when: inventory_hostname in groups['unicorn-hosts']
+  command: bash -lc "cd {{ mapping_path }} && aws s3 cp s3://{{ rorArtifactBucketName }}/{{ ARTIFACT_S3_FOLDER }}/{{ mapping_file_artifact.stdout }} ."
+
+- name: extracting mapping artifact
+  when: inventory_hostname in groups['unicorn-hosts']
+  unarchive:
+    src: "{{ mapping_file_artifact.stdout }}"
+    dest: "{{ mapping_path }}"
+    remote_src: yes
+
+- name: moving mapping.csv file
+  when: inventory_hostname in groups['unicorn-hosts']
+  copy:
+    src: "{{mapping_path}}/mapping/help_mapping.csv"
+    dest: "/opt/cynccore/cync-base/config"
+    remote_src: yes
+
+- name: delete the tar.gz file
+  file:
+    path: "{{ mapping_path }}/{{ mapping_file_artifact.stdout }}"
+    state: absent

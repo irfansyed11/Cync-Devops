@@ -1,0 +1,6 @@
+- hosts: unicorn-hosts
+  become: yes
+  gather_facts: False
+  user: demo
+  roles:
+    - ../roles/unicorn

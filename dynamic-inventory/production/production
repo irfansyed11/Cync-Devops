@@ -1,0 +1,169 @@
+[tag_Name_NDS_CYNC_PROD_Cron]
+
+[tag_Name_NDS_CYNC_PROD_Nginx]
+
+[tag_Name_NDS_CYNC_PROD_MCL_SRVR]
+
+[tag_Name_NDS_CYNC_PROD_SIDEKIQ_SRVR]
+
+[tag_Name_NDS_CYNC_PROD_Unicorn]
+
+[tag_Name_NDS_CYNC_PROD_SIDEKIQSIMILARITY_SRVR]
+
+[tag_Name_NDS_CYNC_PROD_CashApp] 
+
+[unicorn-hosts:children]
+tag_Name_NDS_CYNC_PROD_Unicorn
+
+[sidekiq-hosts:children]
+tag_Name_NDS_CYNC_PROD_Sidekiq
+
+[cron-hosts:children]
+tag_Name_NDS_CYNC_PROD_Cron
+
+[angular-hosts:children]
+tag_Name_NDS_CYNC_PROD_Nginx
+
+[angular-rw-hosts:children]
+tag_Name_NDS_CYNC_PROD_Nginx
+
+[angular-cash-hosts:children]
+tag_Name_NDS_CYNC_PROD_Nginx
+
+[angular-term-loan-hosts:children]
+tag_Name_NDS_CYNC_PROD_Nginx
+
+[angular-fa-hosts:children]
+tag_Name_NDS_CYNC_PROD_Nginx
+
+[ror-cashapp-hosts:children]
+tag_Name_NDS_CYNC_PROD_CashApp_Passenger
+
+[sidekiq-similarity-hosts:children]
+tag_Name_NDS_CYNC_PROD_Similarity_Sidekiq
+
+[multi-collateral-loan-hosts:children]
+tag_Name_NDS_CYNC_PROD_MCL_SRVR
+
+[jumphost]
+localhost
+
+[jumphost:vars]
+amicount=450
+lccount=175
+snapcount=550
+count=10
+bucketName=prod-cync-automation-artifacts
+sns_region=us-east-1
+sns_topic=PROD-Deployment-Notification
+envname=production
+aws_account_id=436415935402
+regionname=us-east-1
+sidekiqSimilarityTag=NDS-CYNC-PROD-SIDEKIQSIMILARITY-SRVR
+nginx={'tags': {'InstanceName': 'NDS-CYNC-PROD-NGINX-SRVR', 'deleteami': '1', 'ApplicationID': 'CYNC', 'ApplicationRole': 'WEB-SRVR-AMI', 'Environment':'PROD', 'Group':'NGINX', 'Owner':'NDS', 'Project':'NDS-CYNC', 'Retention': 'TRUE'},'noreboot': 'yes', 'tagState': 'Blue', 'tagName':'NDS-CYNC-PROD-NGINX-SRVR', 'instanceType' : 'm5.large', 'autoScalingGroupName': 'NDS-CYNC-PROD-NGINX-ASG','devicename': '/dev/sda1', 'devicetype': 'gp2','size':'20', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','terminationpolicy': 'NewestInstance' }
+cron={'tags': {'InstanceName': 'NDS-CYNC-PROD-CRON-SRVR', 'deleteami': '1', 'ApplicationID': 'CYNC', 'ApplicationRole': 'BKGD-SRVR-AMI', 'Environment':'PROD', 'Group':'CRON', 'Owner':'NDS', 'Project':'NDS-CYNC', 'Retention': 'TRUE'},'noreboot': 'yes', 'tagState': 'Blue', 'tagName':'NDS-CYNC-PROD-CRON-SRVR', 'instanceType' : 'r4.large', 'autoScalingGroupName': 'NDS-CYNC-PROD-Cron-ASG', 'devicename': '/dev/sda1', 'devicetype': 'gp2' ,'size':'20', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','terminationpolicy': 'NewestInstance' }
+sidekiqsimilarity={'tags': {'InstanceName': 'NDS-CYNC-PROD-SIDEKIQSIMILARITY-SRVR', 'deleteami': '1', 'ApplicationID': 'CYNC', 'ApplicationRole': 'BKGD-SRVR-AMI', 'Environment':'PROD', 'Group':'SIMILARITY-SIDEKIQ', 'Owner':'NDS', 'Project':'NDS-CYNC', 'Retention': 'TRUE'},'noreboot': 'yes', 'tagState': 'Blue', 'tagName':'NDS-CYNC-PROD-SIDEKIQSIMILARITY-SRVR', 'instanceType' : 'm5.4xlarge', 'autoScalingGroupName': 'NDS-CYNC-PROD-Sidekiqsim-ASG' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'20', 'createlc':'1', 'waitforami':'yes','ebsoptimized': 'yes', 'instancemonitoring': 'yes','terminationpolicy': 'NewestInstance' }
+sidekiq={'tags': {'InstanceName': 'NDS-CYNC-PROD-SIDEKIQ-SRVR', 'deleteami': '1', 'ApplicationID': 'CYNC', 'ApplicationRole': 'BKGD-SRVR-AMI', 'Environment':'PROD', 'Group':'SIDEKIQ', 'Owner':'NDS', 'Project':'NDS-CYNC', 'Retention': 'TRUE'},'noreboot': 'yes', 'tagState': 'Blue', 'tagName':'NDS-CYNC-PROD-SIDEKIQ-SRVR', 'instanceType' : 'm5.2xlarge', 'autoScalingGroupName': 'NDS-CYNC-PROD-Sidekiq-ASG', 'devicename': '/dev/sda1', 'devicetype': 'gp2' ,'size':'20', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','terminationpolicy': 'NewestInstance' }
+unicorn={'tags': {'InstanceName': 'NDS-CYNC-PROD-UNICORN-SRVR', 'deleteami': '1', 'ApplicationID': 'CYNC', 'ApplicationRole': 'APP-SRVR-AMI', 'Environment':'PROD', 'Group':'UNICORN', 'Owner':'NDS', 'Project':'NDS-CYNC', 'Retention': 'TRUE'},'noreboot': 'yes', 'tagState': 'Blue', 'tagName':'NDS-CYNC-PROD-UNICORN-SRVR', 'instanceType' : 'r4.large', 'autoScalingGroupName': 'NDS-CYNC-PROD-Unicorn-ASG', 'devicename': '/dev/sda1', 'devicetype': 'gp2' ,'size':'20', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','terminationpolicy': 'NewestInstance' }
+rorcash={'tags': {'InstanceName': 'NDS-CYNC-PROD-CashApp', 'deleteami': '1', 'ApplicationID': 'CYNC', 'ApplicationRole': 'CASH-APP-SRVR', 'Environment':'PROD', 'Group':'APP-SRVR', 'Owner':'NDS', 'Project':'NDS-CYNC', 'Retention': 'TRUE'},'noreboot': 'yes', 'tagState': 'Blue', 'tagName':'NDS-CYNC-PROD-CashApp', 'instanceType' : 't3.xlarge', 'autoScalingGroupName': 'NDS-CYNC-PROD-CashApp-ASG' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'20', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes' }
+
+multiloan={'tags': {'InstanceName': 'NDS-CYNC-PROD-MCL-SRVR', 'deleteami': '1', 'ApplicationID': 'CYNC', 'ApplicationRole': 'MCL-AMI', 'Environment':'PROD', 'Group':'MULTILOAN', 'Owner':'NDS', 'Project':'NDS-CYNC', 'Retention': 'TRUE'},'noreboot': 'yes', 'tagState': 'Blue', 'tagName':'NDS-CYNC-PROD-MCL-SRVR', 'instanceType' : 't3.xlarge', 'autoScalingGroupName': 'NDS-CYNC-PROD-MCL-ASG' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'8', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes' }
+
+ami_multiloan_tags=["{{multiloan}}"]
+
+ami_tags=["{{sidekiqsimilarity}}","{{cron}}","{{sidekiq}}","{{unicorn}}"]
+angular_ami_tags=["{{nginx}}"]
+ami_cash_tags=["{{rorcash}}"]
+
+keyName=EnvName
+valueName=production
+
+status_message=success
+SourceArtifactBucket=staging-cync-artifacts
+#SourceArtifactAngularName=ngbuild_{{ angular_version }}.tar.gz
+#SourceArtifactName=cync_ror_{{ ror_version }}.tar.gz
+SourceArtifactTermloanName=termloan_angular_ngbuild_{{ termloan_angular_version }}.tar.gz
+DestinationArtifactBucket=prod-cync-automation-artifacts
+SourceArtifactMulticollateralName=cync_multi_collateral_{{ multiloanror_version }}.tar.gz
+DestinationMulticollateralArtifactBucket=prod-cync-automation-artifacts
+count=10
+bucketname=prod-cync-automation-artifacts
+
+[ror-hosts:vars]
+statusMessage=success
+rorArtifactBucketName=prod-cync-automation-artifacts
+rorArtifactName=cync_ror_{{ ror_version }}.tar.gz
+configFileBucket=prod-cync-automation-config
+databasefilename=database.yml
+cdnbucket=prod-cync-cdn
+envname=production
+regionname=us-east-1
+
+
+[angular-hosts:vars]
+AngularArtifactBucketName=prod-cync-automation-artifacts
+statusMessage=completed
+AngularArtifactName=ngbuild_{{ angular_version }}.tar.gz
+configureBucketName=prod-cync-automation-config
+regionname=us-east-1
+angularPath=/opt/angular
+MaintenanceWindowBucket=prod-cync-automation-config
+MaintenancePagePath=/var/www/html/production/maintenance.html
+
+[angular-cash-hosts:vars]
+#cashangularPath=/opt/cash-application
+AngularCashArtifactBucketName=prod-cync-automation-artifacts
+AngularCashArtifactName=cashapp_ngbuild_{{ cashapp_angular_version }}.tar.gz
+statusMessage=completed
+configureBucketName=prod-cync-automation-config
+regionname=us-east-1
+
+[ror-cashapp-hosts:vars]
+rorArtifactBucketName=prod-cync-automation-artifacts
+rorCashArtifactName=cync_cash_{{ cashapp_version }}.tar.gz
+envname=production
+configFileBucket=prod-cync-automation-config
+databasefilename=cash-database.yml
+regionname=us-east-1
+statusMessage=success
+
+[angular-term-loan-hosts:vars]
+AngularTermLoanArtifactBucketName=prod-cync-automation-artifacts
+statusMessage=success
+AngularTermLoanArtifactName=termloan_angular_ngbuild_{{ termloan_angular_version }}.tar.gz
+configureBucketName=prod-cync-automation-config
+regionname=us-east-1
+termloanpath=/opt/term-loan
+
+[angular-fa-hosts:vars]
+AngularFaArtifactBucketName=prod-cync-automation-artifacts
+statusMessage=completed
+AngularFaArtifactName=fa_ngbuild_{{ financial_angular_version }}.tar.gz
+configureBucketName=prod-cync-automation-config
+faangularPath=/opt/financial
+regionname=us-east-1
+
+[angular-rw-hosts:vars]
+AngularRWArtifactBucketName=prod-cync-automation-artifacts
+statusMessage=completed
+configureBucketName=prod-cync-automation-config
+rwangularPath=/opt/insights
+regionname=us-east-1
+AngularRWArtifactName=rw_ngbuild_{{ rw_angular_version }}.tar.gz
+
+[multi-collateral-loan-hosts:vars]
+rorArtifactBucketName=prod-cync-automation-artifacts
+multiloanrorArtifactName=cync_multi_collateral_{{ multiloanror_version }}.tar.gz
+envname=production
+configFileBucket=prod-cync-automation-config
+databasefilename=prod_mcl_database.yml
+regionname=us-east-1
+statusMessage=success
+
+
+[ror-hosts:children]
+unicorn-hosts
+sidekiq-hosts
+cron-hosts
+sidekiq-similarity-hosts
+

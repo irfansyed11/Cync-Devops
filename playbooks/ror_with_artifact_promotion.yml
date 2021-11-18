@@ -1,0 +1,192 @@
+---
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  roles:
+    - { role: ../roles/send-sns-notification, status: started }
+
+#- hosts: angular-hosts
+  #gather_facts: false
+  #remote_user: ubuntu
+  #tasks:
+  #- name: Block to copy maintenance window page
+    #block:
+    #- include_role:
+        #name: ../roles/copy-maintenance-window
+    #rescue:
+      #- set_fact:
+          #statusMessage: "failed"
+
+  #- name: End the play if maintenance page copy fails.
+    #block:
+    #- fail: msg="Deployment failed while copying maintenance window page."
+      #with_items: "{{ groups['angular-hosts'] }}"
+      #when: hostvars[item].statusMessage == "failed"
+
+- hosts: jumphost
+  connection: local
+  remote_user: ubuntu
+  tasks:
+  - name: Block to copy ROR artifacts
+    block:
+    - include_role:
+        name: ../roles/copyror
+    #ignore_errors: true
+    rescue:
+      - include_role:
+          name: ../roles/send-sns-notification
+        vars:
+          status: failed to copy ror artifacts
+      - fail:
+          msg: 'Copy ROR Artifacts failed'
+
+  # - name: Block to tag s3 artifacts
+  #   block:
+  #   - include_role:
+  #       name: ../roles/s3tags
+  #   #ignore_errors: true
+  #   rescue:
+  #     - include_role:
+  #         name: ../roles/send-sns-notification
+  #       vars:
+  #         status: failed tagging s3 artifacts
+  #     - fail:
+  #         msg : 'S3 tagging artifacts failed'
+
+  - name: Block to start the similarity instance
+    block:
+    - name: start sidekiqsimilarity instance
+      when: sidekiqSimilarityTag is defined
+      local_action:
+        module: ec2
+        region: '{{ regionname }}'
+        instance_tags:
+          Name: "{{ sidekiqSimilarityTag }}"
+        state: running
+        wait: True        
+      register: ec2Similarity
+    #ignore_errors: true
+    rescue:
+      - include_role:
+          name: ../roles/send-sns-notification
+        vars:
+          status: failed starting similarity instance
+      - fail:
+          msg: 'failed starting similarity instance'
+  
+  - name: wait for similarity instance to start
+    wait_for: timeout=60
+
+  # - name: block to check if similarity instance port is reachable
+  #   block:
+  #   - name: check if instance is running and port 22 is reachable
+  #     wait_for:
+  #       host: "{{item.private_ip}}"
+  #       delay: 30
+  #       port: 22
+  #       timeout: 60
+  #       state: started
+  #       msg: "Unable to start port 22"
+  #     with_items: "{{ec2Similarity.instances}}"
+  #     register: status
+  #   rescue:
+  #     - include_role:
+  #         name: ../roles/send-sns-notification
+  #       vars:
+  #         status: unable to reach port 22 for similarity instance
+  #     - fail:
+  #         msg: 'failed connecting to port 22 for similarity instance'
+
+- hosts: ror-hosts
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block for ROR deployment
+    block:
+    - include_role:
+        name: ../roles/ror
+    #ignore_errors: true
+    rescue:
+      - set_fact:
+          statusMessage: "failed"
+     
+#- hosts: angular-hosts
+  #gather_facts: false
+  #remote_user: ubuntu
+  #tasks:
+  #- name: Block to remove maintenance window page
+    #block:
+    #- include_role:
+        #name: ../roles/remove-maintenance-window
+    #rescue:
+      #- set_fact:
+          #statusMessage: "failed"
+
+  #- name: End the play if maintenance page removal fails.
+    #block:
+    #- fail: msg="Deployment failed while deleting maintenance window page."
+      #with_items: "{{ groups['angular-hosts'] }}"
+      #when: hostvars[item].statusMessage == "failed"
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to send ror deployment failure notification
+    block:
+    - include_role:
+        name: ../roles/send-sns-notification
+      vars:
+        status: failed ror deployment
+      with_items: "{{ groups['ror-hosts'] }}"
+      when: hostvars[item].statusMessage == "failed"
+ 
+  - name: End the play if deployment fails
+    block:
+    - fail: msg="ROR deployment failed"
+      with_items: "{{ groups['ror-hosts'] }}"
+      when: hostvars[item].statusMessage == "failed"
+
+  - name: Block to create AMI, LC and ASG
+    block:
+    - include_role:
+       name: ../roles/create-ami-lc-updateasg
+      with_items: "{{ ami_tags }}"
+    #ignore_errors: true
+    rescue:
+      - include_role:
+          name: ../roles/send-sns-notification
+        vars:
+          status: ror deployment successful, failed creating ami/lc/asg
+      - fail:
+          msg: 'Failed to create the AMI/LC/ASG'
+
+  - name: Block to stop similarity instance
+    block:
+    - name: Stop the similarity instance
+      when: sidekiqSimilarityTag is defined
+      local_action:
+        module: ec2
+        region: '{{ regionname }}'
+        instance_tags:
+          Name: "{{ sidekiqSimilarityTag }}"
+        state: stopped
+        wait: yes
+    #ignore_errors: true
+    rescue:
+      - include_role:
+          name: ../roles/send-sns-notification
+        vars:
+          status: failed to stop similarity instance
+      - fail:
+          msg: 'Failed to stop similarity instance'
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  roles:
+    - role: ../roles/send-sns-notification
+      status: completed

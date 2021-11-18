@@ -1,0 +1,248 @@
+[tag_Name_NDS_CYNC_PRESTAGING_Ror]    
+
+[tag_Name_NDS_CYNC_PRESTAGING_CashApp_Ror]
+
+[tag_Name_NDS_CYNC_PRESTAGING_Multi_Loan]
+
+[tag_Name_NDS_CYNC_PRESTAGING_Authapp]
+
+[tag_Name_NDS_CYNC_PRESTAGING_Factoring]
+
+[tag_Name_NDS_CYNC_PRESTAGING_Factoring_Rails]
+
+[unicorn-hosts:children]
+tag_Name_NDS_CYNC_PRESTAGING_Ror
+
+[sidekiq-hosts:children]
+tag_Name_NDS_CYNC_PRESTAGING_Ror
+
+[cron-hosts:children]
+tag_Name_NDS_CYNC_PRESTAGING_Ror
+
+[angular-hosts:children]
+tag_Name_NDS_CYNC_PRESTAGING_Ror
+
+[angular-abl-hosts:children]
+tag_Name_NDS_CYNC_PRESTAGING_Ror
+
+[ror-cashapp-hosts:children]
+tag_Name_NDS_CYNC_PRESTAGING_CashApp_Ror 
+
+[angular-cash-hosts:children]
+tag_Name_NDS_CYNC_PRESTAGING_Ror 
+
+[multi-collateral-loan-hosts:children]
+tag_Name_NDS_CYNC_PRESTAGING_Multi_Loan
+
+[angular-term-loan-hosts:children]
+tag_Name_NDS_CYNC_PRESTAGING_Ror
+
+[factoring-unicorn-hosts:children]
+tag_Name_NDS_CYNC_PRESTAGING_Factoring
+
+[factoring-sidekiq-hosts:children]
+tag_Name_NDS_CYNC_PRESTAGING_Factoring
+
+[factoring-rails6-unicorn-hosts:children]
+tag_Name_NDS_CYNC_PRESTAGING_Factoring_Rails
+
+[factoring-rails6-sidekiq-hosts:children]
+tag_Name_NDS_CYNC_PRESTAGING_Factoring_Rails
+
+[authapp-unicorn-hosts:children]
+tag_Name_NDS_CYNC_PRESTAGING_Authapp
+
+[sidekiq-similarity-hosts:children]
+
+[webhelp-hosts:children]
+tag_Name_NDS_CYNC_PRESTAGING_Ror
+
+
+[jumphost]
+localhost
+
+[jumphost:vars]
+
+amicount=450
+lccount=190
+snapcount=550
+count=10
+bucketname=prestaging-cync-artifacts
+regionname=us-east-1
+sns_region=us-east-1
+sns_topic=Prestaging-Cync-Deployment-Notification
+envname=prestaging
+aws_account_id=798793081579
+cronTag=NDS-CYNC-PRESTAGING-Ror
+ssm_Instanceid=i-0967a21d2c8913fa6
+ssm_workingdirectory=/home/ubuntu/cync-devops-ansible/jenkins_sh_files/jenkin_jobs_files/cync_qa_automation
+ssm_executiontimeout=14400
+ssm_CloudWatchLoggroupName=SsmRunCommandLog
+ssm_document_version=1
+ssm_timeout_seconds=30
+ssm_max_concurrency=50
+ssm_max_errors=0
+ssm_shfile=./generate_reports.sh
+qa_automation_trigger_required=true
+qa_automation_trigger_application_list=["Cync_Automation_ABL"]
+cyncInstance={'tags': '"Key"="Environment","Value"="PRESTAGING" "Key"="InstanceName","Value"="NDS-CYNC-PRESTAGING-Ror" "Key"="deleteami","Value"="1"','noreboot': 'no', 'tagState': 'green', 'tagName': 'NDS-CYNC-PRESTAGING-Ror', 'instanceType' : 'm5.xlarge', 'autoScalingGroupName': 'NDS-CYNC-PRESTAGING-ROR' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'15', 'createlc':'1','waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes','terminationpolicy': 'NewestInstance', 'LtName':'NDS-CYNC-PRESTAGING-Ror-LT' }
+
+rorcash={'tags': {'InstanceName': 'NDS-CYNC-PRESTAGING-CashApp-Ror', 'Environment': 'PRESTAGING', 'deleteami': '1'},'noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-PRESTAGING-CashApp-Ror', 'instanceType' : 't3.xlarge', 'autoScalingGroupName': 'NDS-CYNC-PRESTAGING-CashApp-Ror' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'8', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes' }
+
+multiloan={'tags': '"Key"="Environment","Value"="PRESTAGING" "Key"="InstanceName","Value"="NDS-CYNC-PRESTAGING-Multi-Loan" "Key"="deleteami","Value"="1"','noreboot': 'no', 'tagState': 'green', 'tagName':'NDS-CYNC-PRESTAGING-Multi-Loan', 'instanceType' : 't3.xlarge', 'autoScalingGroupName': 'NDS-CYNC-PRESTAGING-Multi-Loan' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'8', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes', 'LtName':'NDS-CYNC-PRESTAGING-MCL-LT' }
+
+FactoringAppror={'tags': {'InstanceName': 'NDS-CYNC-PRESTAGING-Factoring', 'Environment': 'PRESTAGING', 'deleteami': '1'},'noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-PRESTAGING-Factoring', 'instanceType' : 'm5.large', 'autoScalingGroupName': 'NDS-CYNC-PRESTAGING-Factoring' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'12', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes', 'LtName':'NDS-CYNC-PRESTAGING-Factoring-LT' }
+
+FactoringRails6={'tags': '"Key"="Environment","Value"="PRESTAGING" "Key"="InstanceName","Value"="NDS-CYNC-PRESTAGING-Factoring-Rails" "Key"="deleteami","Value"="1"','noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-PRESTAGING-Factoring-Rails', 'instanceType' : 'm5.large', 'autoScalingGroupName': 'NDS-CYNC-PRESTAGING-Factoring-Rails' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'12', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes', 'LtName':'NDS-CYNC-PRESTAGING-Factoring-Rails-LT' }
+
+AuthAppror={'tags': '"Key"="Environment","Value"="PRESTAGING" "Key"="InstanceName","Value"="NDS-CYNC-PRESTAGING-Authapp" "Key"="deleteami","Value"="1"','noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-PRESTAGING-Authapp', 'instanceType' : 't3.large', 'autoScalingGroupName': 'NDS-CYNC-PRESTAGING-Authapp' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'12', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes', 'LtName':'NDS-CYNC-PRESTAGING-Authapp-LT' }
+
+ami_multiloan_tags=["{{multiloan}}"]
+ami_cash_tags=["{{rorcash}}"]
+ami_tags=["{{cyncInstance}}"]
+angular_ami_tags=["{{cyncInstance}}"]
+ami_FactoringApp_tags=["{{FactoringAppror}}"]
+ami_FactoringRails6_tags=["{{FactoringRails6}}"]
+ami_AuthApp_tags=["{{AuthAppror}}"]
+ami_abl_angular_tags=["{{cyncInstance}}"]
+ami_webhelp_tags=["{{cyncInstance}}"]
+keyName=EnvName
+valueName=prestaging
+statusMessage=success
+
+SourceArtifactBucket=prestaging-cync-artifacts
+SourceArtifactAngularName=ngbuild_{{ angular_version }}.tar.gz
+SourceArtifactTermloanName=termloan_angular_ngbuild_{{ termloan_angular_version }}.tar.gz
+SourceArtifactName=cync_ror_{{ ror_version }}.tar.gz
+DestinationArtifactBucket=prestaging-cync-artifacts
+SourceMulticollateralArtifactBucket=prestaging-cync-artifacts
+SourceArtifactMulticollateralName=cync_multi_collateral_{{ multiloanror_version }}.tar.gz
+DestinationMulticollateralArtifactBucket=prestaging-cync-artifacts
+SourceAuthAppArtifactBucket=staging-cync-artifacts
+SourceArtifactAuthAppName=cync_auth_app_ror_{{ authapp_ror_version }}.tar.gz
+SourceFactoring-AppArtifactBucket=staging-cync-artifacts
+SourceArtifactFactoring-AppName=cync_factoring_app_ror_{{ factoring_ror6_version }}.tar.gz
+DestinationAuthAppArtifactBucket=staging-cync-artifacts
+DestinationFactoring-AppArtifactBucket=staging-cync-artifacts
+SourceABLArtifactBucket=staging-cync-artifacts
+SourceABLArtifactName=abl_angular_ngbuild_{{ abl_angular_version }}.tar.gz
+DestinationABLArtifactBucket=staging-cync-artifacts
+
+[ror-hosts:vars]
+statusMessage=success
+rorArtifactBucketName=staging-cync-artifacts
+rorArtifactName=cync_ror_{{ ror_version }}.tar.gz
+configFileBucket=prestaging-cync-config
+databasefilename=database.yml
+cdnbucket=prestaging-cdn
+envname=prestaging
+regionname=us-east-1
+mapping_path=/home/ubuntu
+ARTIFACT_S3_FOLDER=cync
+
+[factoring-hosts:vars]
+statusMessage=success
+rorArtifactBucketName=staging-cync-artifacts
+rorArtifactName=cync_factoring_app_ror_{{ factoring_ror_version }}.tar.gz
+configFileBucket=prestaging-cync-config
+databasefilename=database.yml
+cdnbucket=prestaging-cdn
+envname=prestaging
+regionname=us-east-1
+
+[factoring-rails6-hosts:vars]
+statusMessage=success
+rorArtifactBucketName=staging-cync-artifacts
+rorArtifactName=cync_factoring_app_ror_{{ factoring_ror6_version }}.tar.gz
+configFileBucket=prestaging-cync-config
+databasefilename=database.yml
+cdnbucket=prestaging-cdn
+envname=prestaging
+regionname=us-east-1
+
+[authapp-unicorn-hosts:vars]
+statusMessage=success
+rorArtifactBucketName=staging-cync-artifacts
+rorArtifactName=cync_auth_app_ror_{{ authapp_ror_version }}.tar.gz
+configFileBucket=prestaging-cync-config
+databasefilename=database.yml
+cdnbucket=prestaging-cdn
+envname=prestaging
+regionname=us-east-1
+
+[angular-hosts:vars]
+AngularArtifactBucketName=staging-cync-artifacts
+statusMessage=success
+AngularArtifactName=ngbuild_{{ angular_version }}.tar.gz
+configureBucketName=prestaging-cync-config
+regionname=us-east-1
+angularPath=/opt/angular
+MaintenanceWindowBucket=prestaging-cync-config
+
+
+[angular-abl-hosts:vars]
+ablangularPath=/opt/abl-application-angular
+AngularAblArtifactBucketName=staging-cync-artifacts
+AngularAblArtifactName=abl_angular_ngbuild_{{ abl_angular_version }}.tar.gz
+statusMessage=completed
+regionname=us-east-1
+configureBucketName=prestaging-cync-config
+
+[ror-cashapp-hosts:vars]
+rorArtifactBucketName=staging-cync-artifacts
+statusMessage=completed
+rorCashArtifactName=cync_cash_{{ cashapp_version  }}.tar.gz
+envname=prestaging
+configFileBucket=prestaging-cync-config
+databasefilename=cash-database.yml
+adminDBfilename=cashapp_ror_admin_db.yml
+regionname=us-east-1
+MaintenanceWindowBucket=prestaging-cync-config
+
+[angular-cash-hosts:vars]
+cashangularPath=/opt/cash-application-angular
+AngularCashArtifactBucketName=staging-cync-artifacts
+statusMessage=completed
+AngularCashArtifactName=cashapp_ngbuild_{{ cashapp_angular_version }}.tar.gz
+configureBucketName=prestaging-cync-config
+regionname=us-east-1
+MaintenanceWindowBucket=prestaging-cync-config
+
+[multi-collateral-loan-hosts:vars]
+rorArtifactBucketName=staging-cync-artifacts
+multiloanrorArtifactName=cync_multi_collateral_{{ multiloanror_version }}.tar.gz
+envname=prestaging
+configFileBucket=prestaging-cync-config
+databasefilename=multiloan_database.yml
+adminDBfilename=mcl_ror_admin_db.yml
+regionname=us-east-1
+statusMessage=success
+
+[angular-term-loan-hosts:vars]
+AngularTermLoanArtifactBucketName=staging-cync-artifacts
+statusMessage=success
+AngularTermLoanArtifactName=termloan_angular_ngbuild_{{ termloan_angular_version }}.tar.gz
+configureBucketName=prestaging-cync-config
+regionname=us-east-1
+termloanpath=/opt/term-loan
+
+[webhelp-hosts:vars]
+WebhelpArtifactBucketName=staging-cync-artifacts
+statusMessage=completed
+WebhelpArtifactName=content_webhelp_{{ webhelp_version }}.tar.gz
+configureBucketName=prestaging-cync-config
+regionname=us-east-1
+webhelpPath=/opt/web-help
+
+[ror-hosts:children]
+unicorn-hosts
+sidekiq-hosts
+cron-hosts
+
+[factoring-hosts:children]
+factoring-unicorn-hosts
+factoring-sidekiq-hosts
+
+[factoring-rails6-hosts:children]
+factoring-rails6-unicorn-hosts
+factoring-rails6-sidekiq-hosts

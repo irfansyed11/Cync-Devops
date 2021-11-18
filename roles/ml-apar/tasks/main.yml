@@ -1,0 +1,31 @@
+---
+- name: delete contents of cync-ml-apar folder
+  shell: rm -rf /opt/cync-ml-apar/*
+
+- name: Download the artifact from s3 bucket to the remote node
+  aws_s3:
+        bucket: "{{ APARArtifactBucketName}}"
+        object: "/ml-apar/{{ APARArtifactName }}"
+        dest: /opt/cync-ml-apar/ml-apar.tar.gz
+        mode: get
+- name: Extract the downloaded artifact
+  unarchive:
+    src: /opt/cync-ml-apar/ml-apar.tar.gz
+    dest: /opt/cync-ml-apar
+    remote_src: yes
+
+- name: delete the tar.gz file
+  file:
+    path: /opt/cync-ml-apar/ml-apar.tar.gz
+    state: absent
+
+- name: installing dependencies
+  command: bash -lc "cd /opt/cync-ml-apar/ml_workflow/ && pip3.7 install -r Requirements.txt"
+
+- name: Killing python process
+  shell: "ps aux | grep 'python3'| awk '{print $2}' | xargs kill -9"
+  ignore_errors: True
+
+- name: start the sharetoout.py
+  shell: "cd /opt/cync-ml-apar/ml_workflow/ && nohup python3.7 sharetoout.py -s /opt/monarch/conversion_required/ -d /opt/monarch/cync-ml-apar/out/ </dev/null >/dev/null 2>&1 &"
+    

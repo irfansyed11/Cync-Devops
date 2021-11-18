@@ -1,0 +1,11 @@
+---
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  vars:
+    - objectname: cync/ngbuild
+    - start: 0
+  roles:
+    - ../roles/get-artifacts-list
+

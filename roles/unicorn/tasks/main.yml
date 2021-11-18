@@ -1,0 +1,13 @@
+# tasks file for staging
+- name: Simple GET operation
+  s3:
+    bucket: dev-cync-artifacts
+    object: /cync/cync-ror.tar.gz
+    dest: /home/demo/cync-ror.tar.gz
+    mode: get
+
+- name: Unarchive a file that needs to be downloaded
+  unarchive:
+    src: /home/demo/cync-ror.tar.gz
+    dest: /home/demo/s3zipfile
+    remote_src: yes

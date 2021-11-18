@@ -1,0 +1,124 @@
+---
+- name: Delete contents from Multi-loan-ror folder
+  shell: rm -rf /home/ubuntu/apps/multi-collateral-loan/*
+
+- name: Download the artifact file from s3 bucket
+  aws_s3:
+    bucket: "{{ rorArtifactBucketName }}"
+    object: "/multicollateral/{{ multiloanrorArtifactName }}"
+    dest: /home/ubuntu/apps/multi-collateral-loan/multi-collateral.tar.gz
+    mode: get
+
+- name: Ensure directories are 0755
+  command: find /home/ubuntu/apps/multi-collateral-loan -type d -exec chmod 0755 * {} \;
+
+- name: Extract the downloaded artifact file
+  unarchive:
+    src: /home/ubuntu/apps/multi-collateral-loan/multi-collateral.tar.gz
+    dest: /home/ubuntu/apps/multi-collateral-loan
+    remote_src: yes
+
+- name: Delete the artifact file
+  file:
+    path: /home/ubuntu/apps/multi-collateral-loan/multi-collateral-loan.tar.gz
+    state: absent
+
+- name: Ensure file  are 0755
+  command: find /home/ubuntu/apps/multi-collateral-loan/ -type f -exec chmod 0755 * {} \;
+
+- name: install gems
+  shell: bash -lc "cd /home/ubuntu/apps/multi-collateral-loan && bundle install "
+
+- name: Download the database configuration file to the respective application folder
+  aws_s3:
+    bucket: "{{ configFileBucket }}"
+    object: "{{ databasefilename }}"
+    dest: /home/ubuntu/apps/multi-collateral-loan/config/database.yml
+    mode: get
+
+- name: Download the adminDB configuration file to the respective application folder
+  aws_s3:
+    bucket: "{{ configFileBucket }}"
+    object: "{{ adminDBfilename }}"
+    dest: /home/ubuntu/apps/multi-collateral-loan/config/admin_db.yml
+    mode: get
+
+- name: Download the sidekiq god configuration file to the respective application folder
+  aws_s3:
+        bucket: "{{ configFileBucket }}"
+        object: "multi-loan.god"
+        dest: /home/ubuntu/apps/multi-collateral-loan/multi-loan.god
+        mode: get
+
+- name: Run DB migrations
+  command: bash -lc "cd /home/ubuntu/apps/multi-collateral-loan && bundle exec rake db:migrate RAILS_ENV={{ envname }}"
+  run_once: true
+
+- name: sqlimport
+  command: bash -lc "cd /home/ubuntu/apps/multi-collateral-loan && bundle exec rake sql:import RAILS_ENV={{ envname }}"
+  run_once: true
+  
+- name: Kill running puma
+  shell: "ps aux | grep -i '[p]uma' | awk '{print $2}' | xargs kill -9"
+  ignore_errors: True
+  
+- name: start puma
+  command: bash -lc "cd /home/ubuntu/apps/multi-collateral-loan/ && puma -e {{ envname }} -t 2:2 -w 2 -d" 
+
+- name: "Stopping god process"
+  command: bash -lc "cd /home/ubuntu/apps/multi-collateral-loan/ && god terminate"
+  ignore_errors: True
+
+- name: "Killing sidekiq process"
+  shell: "ps aux | grep 'sidekiq' | awk '{print $2}' | xargs kill -9"
+  ignore_errors: True
+
+- name: Restart sidekiq
+  command: bash -lc "cd /home/ubuntu/apps/multi-collateral-loan && export RAILS_ENV={{ envname }} && god -c multi-loan.god"
+
+- name: Kill running karafka
+  shell: "ps aux | grep 'karafka' | awk '{print $2}' | xargs sudo kill -9"
+  ignore_errors: True
+
+- name: Remove pid file
+  command: bash -lc "cd /home/ubuntu/apps/multi-collateral-loan/tmp/pids && rm -f karafka"
+  ignore_errors: True
+
+- name: start karafka
+  command: bash -lc "cd /home/ubuntu/apps/multi-collateral-loan && export RAILS_ENV={{ envname }} && bundle exec karafka server --daemon"
+
+- name: Update Crontab
+  command: bash -lc "cd /home/ubuntu/apps/multi-collateral-loan && bundle exec whenever --update-crontab --set environment={{ envname }}"
+  run_once: true
+  
+- name: Get the PATH value
+  command: "echo $PATH"
+  register: command_output
+- cron:
+    name: PATH
+    env: yes
+    value: "{{ command_output.stdout }}"
+- name: Add Puma restart to Crontab
+  when: inventory_hostname in groups['multi-collateral-loan-hosts']
+  cron:
+    name: Puma restart Crontab
+    special_time: reboot
+    job:  "bash -lc 'cd /home/ubuntu/apps/multi-collateral-loan/ && puma -e {{ envname }} -t 2:2 -w 2 -d' "
+- name: Add Sidekiq restart to Crontab
+  when: inventory_hostname in groups['multi-collateral-loan-hosts']
+  cron:
+    name: Sidekiq restart Crontab
+    special_time: reboot
+    job: "bash -lc 'cd /home/ubuntu/apps/multi-collateral-loan && export RAILS_ENV={{ envname }} && god -c multi-loan.god'"
+- name: remove karafka to Crontab
+  when: inventory_hostname in groups['multi-collateral-loan-hosts']
+  cron:
+    name: karafka remove Crontab
+    special_time: reboot
+    job: "bash -lc 'cd /home/ubuntu/apps/multi-collateral-loan/tmp/pids && rm karafka'"
+- name: Add karafka to Crontab
+  when: inventory_hostname in groups['multi-collateral-loan-hosts']
+  cron:
+    name: karafka restart Crontab
+    special_time: reboot
+    job: "bash -lc 'cd /home/ubuntu/apps/multi-collateral-loan && export RAILS_ENV={{ envname }} && bundle exec karafka server --daemon'"

@@ -1,0 +1,4 @@
+---
+#SourceArtifactBucket: dev-cync-artifacts
+SourceArtifactName: ngbuild_{{ angular_version }}.tar.gz
+#DestinationArtifactBucket: staging-cync-artifacts

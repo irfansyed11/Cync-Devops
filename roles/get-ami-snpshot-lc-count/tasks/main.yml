@@ -1,0 +1,14 @@
+---
+  - name: Check if AMI count is greater than 400
+    ec2_ami_info:
+      owner: self
+      region: "{{ regionname }}"
+    register: ami_count
+    failed_when: "ami_count.images | length > {{ amicount }}"
+
+  - name: Check if Snapshots count is greater than 500
+    ec2_snapshot_info:
+       region: "{{ regionname }}"
+       owner_ids: "{{ aws_account_id }}"
+    register: snapshot_count
+    failed_when: "snapshot_count.snapshots | length > {{ snapcount }}"

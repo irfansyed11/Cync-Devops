@@ -1,0 +1,142 @@
+[tag_Name_NDS_CYNC_DEV2_Ror]
+
+[tag_Name_NDS_CYNC_DEV2_CashApp]
+
+[tag_Name_NDS_CYNC_DEV2_Multi_Collateral_Loan]
+
+[unicorn-hosts:children]
+tag_Name_NDS_CYNC_DEV2_Ror
+
+[sidekiq-hosts:children]
+tag_Name_NDS_CYNC_DEV2_Ror
+
+[cron-hosts:children]
+tag_Name_NDS_CYNC_DEV2_Ror
+
+
+[angular-hosts:children]
+tag_Name_NDS_CYNC_DEV2_Ror
+
+[angular-term-loan-hosts:children]
+tag_Name_NDS_CYNC_DEV2_Ror
+
+[sidekiq-similarity-hosts]
+
+[multi-collateral-loan-hosts:children]
+tag_Name_NDS_CYNC_DEV2_Multi_Collateral_Loan
+
+[jumphost]
+localhost
+
+[ror-cashapp-hosts:children]
+tag_Name_NDS_CYNC_DEV2_CashApp
+
+
+[angular-cash-hosts:children]
+tag_Name_NDS_CYNC_DEV2_Ror
+
+
+[jumphost:vars]
+
+amicount=450
+lccount=175
+snapcount=550
+count=10
+bucketName=nds-cync-dev2-artifacts
+sns_region=us-east-1
+sns_topic=Cync-Dev-Deployment-Notification
+sns_topic_Cashangular=NDS-CYNC-DEV-Cashapp-angular-Deployment-Notification
+envname=dev2
+aws_account_id=148654267025
+regionname=us-east-1
+#sidekiqSimilarityTag=CYNC-Dev-Sidekiq-Similarity
+#angular={'tags': {'InstanceName': 'angular', 'deleteami': '1'}, 'tagState': 'green', 'tagName': 'angular', 'instanceType' : '', 'autoScalingGroupName': '' ,'devicename': '' ,'devicetype': '' ,'size':'', 'createlc':'0', 'ebsoptimized': 'yes', 'instancemonitoring': 'yes',,'metricscollection':'yes','terminationpolicy': 'NewestInstance' }
+#sidekiq={'tags': {'Name': 'sidekiq', 'State': 'green'}, 'tagState': 'green', 'tagName': 'sidekiq', 'instanceType' : '', 'autoScalingGroupName': '' ,'devicename': '' ,'devicetype': '' ,'size':'', 'createlc':'0','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes' }
+#cron={'tags': {'Name': 'cron', 'State': 'green'}, 'tagState': 'green', 'tagName': 'cron', 'instanceType' : '', 'autoScalingGroupName': '' ,'devicename': '' ,'devicetype': '' ,'size':'', 'createlc':'0','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes' }
+
+cyncinstance={'tags': {'Name': 'NDS-CYNC-DEV2-Ror', ''Environment': 'DEV2',deleteami': '1'}, 'noreboot': 'yes','tagState': 'green', 'tagName': 'NDS-CYNC-DEV2-Ror', 'instanceType' : 'm4.xlarge', 'autoScalingGroupName': 'NDS-CYNC-DEV2-Ror' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'8', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes' }
+sidekiqsimilarity={'tags': {'InstanceName': 'sidekiqsimilarity', 'deleteami': '1'},  'noreboot': 'yes','tagState': 'green', 'tagName':'CYNC-Dev-Sidekiq-Similarity', 'instanceType' : 'm4.large', 'autoScalingGroupName': 'CYNC-Dev-Sidekiq-Similarity-Asg' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'15', 'createlc':'1', 'waitforami':'yes','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes' }
+
+rorcash={'tags': {'InstanceName': 'tag_Name_NDS_CYNC_DEV2_Ror', 'Environment': 'DEV2','deleteami': '1'},'noreboot': 'yes', 'tagState': 'green', 'tagName':'tag_Name_NDS_CYNC_DEV2_Ror', 'instanceType' : '', 'autoScalingGroupName': 'NDS-CYNC-DEV2-CashApp' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'8', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes' }
+
+multiloan={'tags': {'InstanceName': 'NDS-CYNC-DEV2-Multi-Collateral-Loan', 'Environment': 'DEV2','deleteami': '1'},'noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-DEV2-Multi-Collateral-Loan', 'instanceType' : 't3.xlarge', 'autoScalingGroupName': 'NDS-CYNC-DEV-Multi-Collateral-Loan' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'8', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes' }
+ami_multiloan_tags=["{{multiloan}}"]
+
+ami_tags=["{{cyncinstance}}"]
+angular_ami_tags=["{{cyncinstance}}"]
+ami_cash_tags=["{{rorcash}}"]
+
+#bucketName=cync-artifacts
+keyName=EnvName
+valueName=devror
+
+statusMessage=success
+SourceArtifactBucket=nds-cync-dev2-artifacts
+SourceArtifactAngularName=ngbuild_{{ angular_version }}.tar.gz
+SourceArtifactTermloanName=termloan_angular_ngbuild_{{ termloan_angular_version }}.tar.gz
+SourceArtifactName=cync_ror_{{ ror_version }}.tar.gz
+DestinationArtifactBucket=rorapi-cync-artifacts
+
+[ror-hosts:vars]
+statusMessage=success
+rorArtifactBucketName=nds-cync-dev2-artifacts
+rorArtifactName=cync_ror_{{ ror_version }}.tar.gz
+configFileBucket=dev2-config-bucket
+databasefilename=dev2-database.yml
+cdnbucket=nds-cync-dev2-ror-cdn
+envname=dev2
+regionname=us-east-1
+
+[ror-cashapp-hosts:vars]
+rorArtifactBucketName=nds-cync-dev2-artifacts
+rorCashArtifactName=cync_cash_{{ cashapp_version }}.tar.gz
+envname=dev2
+configFileBucket=dev2-config-bucket
+databasefilename=dev2cash-database.yml
+regionname=us-east-1
+statusMessage=success
+
+[multi-collateral-loan-hosts:vars]
+rorArtifactBucketName=nds-cync-dev-multi-collateral-loan-artifacts
+multiloanrorArtifactName=cync_multi_collateral_{{ multiloanror_version }}.tar.gz
+envname=dev2
+configFileBucket=dev2-config-bucket
+databasefilename=dev2_multiloan_database.yml
+regionname=us-east-1
+statusMessage=success
+
+[angular-hosts:vars]
+AngularArtifactBucketName=nds-cync-dev2-artifacts
+statusMessage=success
+AngularArtifactName=ngbuild_{{ angular_version }}.tar.gz
+configureBucketName=dev2-config-bucket
+angularcdnbucket=dev-cync-angular-cdn
+regionname=us-east-1
+angularPath=/opt/angular
+MaintenanceWindowBucket=dev2-config-bucket
+MaintenancePagePath=/var/www/html/maintenance.html
+
+
+[angular-cash-hosts:vars]
+#cashangularPath=/opt/cash-application
+AngularCashArtifactBucketName=nds-cync-dev2-artifacts
+AngularCashArtifactName=cashapp_ngbuild_{{ cashapp_angular_version }}.tar.gz
+statusMessage=completed
+configureBucketName=dev2-config-bucket
+
+[angular-term-loan-hosts:vars]
+AngularTermLoanArtifactBucketName=nds-cync-dev2-artifacts
+statusMessage=success
+AngularTermLoanArtifactName=termloan_angular_ngbuild_{{ termloan_angular_version }}.tar.gz
+configureBucketName=dev2-config-bucket
+regionname=us-east-1
+termloanpath=/opt/term-loan
+
+[ror-hosts:children]
+unicorn-hosts
+sidekiq-hosts
+cron-hosts
+#sidekiq-similarity-hosts
+
+
+

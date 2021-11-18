@@ -1,0 +1,98 @@
+---
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to check the backup counts
+    block:
+    - include_role:
+        name: ../roles/get-ami-snpshot-lc-count
+    rescue:
+    - include_role:
+        name: ../roles/send-sns-notification
+      vars:
+        status: Backup count error!
+    - fail:
+        msg: 'Failed due to the backup count error!'
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  roles:
+    - { role: ../roles/send-sns-notification, status: started }
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to put uptimerobot maintainance
+    block:
+    - include_role:
+        name: ../roles/put-uptime-robot-mwindow
+      vars:
+        app_name: "Fact-RoR6"         
+    rescue:
+    - include_role:
+        name: ../roles/send-sns-notification
+      vars:
+        status: Putting MWindow on Uptimerobot failed!
+    - fail:
+        msg: 'Putting MWindow on Uptimerobot failed!'
+
+- hosts: factoring-rails6-hosts
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block for ROR-Factoring-rails6 deployment
+    block:
+    - include_role:
+        name: ../roles/ror-factoring-rails6
+    #ignore_errors: true
+    rescue:
+      - set_fact:
+          statusMessage: "failed"
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to send ror factoring-rails6 deployment failure notification
+    block:
+    - include_role:
+        name: ../roles/send-sns-notification
+      vars:
+        status: failed ror factoring-rails6 deployment
+      with_items: "{{ groups['factoring-rails6-hosts'] }}"
+      when: hostvars[item].statusMessage == "failed"
+
+  - name: End the play if deployment fails
+    block:
+    - fail: msg="ROR factoring-rails6 deployment failed"
+      with_items: "{{ groups['factoring-rails6-hosts'] }}"
+      when: hostvars[item].statusMessage == "failed"
+
+  - name: Block to create AMI, LC and ASG
+    block:
+    - include_role:
+       name: ../roles/create-ami-lc-updateasg
+      with_items: "{{ ami_FactoringRails6_tags }}"
+    #ignore_errors: true
+    rescue:
+      - include_role:
+          name: ../roles/send-sns-notification
+        vars:
+          status: failed creating ami
+      - fail:
+          msg: 'Failed to create the AMI/LC/ASG'
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  roles:
+    - role: ../roles/send-sns-notification
+      status: success
+

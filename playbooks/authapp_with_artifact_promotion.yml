@@ -1,0 +1,98 @@
+---
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to check the backup counts
+    block:
+    - include_role:
+        name: ../roles/get-ami-snpshot-lc-count
+    rescue:
+    - include_role:
+        name: ../roles/send-sns-notification
+      vars:
+        status: Backup count error!
+    - fail:
+        msg: 'Failed due to the backup count error!'
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  roles:
+    - { role: ../roles/send-sns-notification, status: started }
+
+- hosts: jumphost
+  connection: local
+  remote_user: ubuntu
+  tasks:
+  - name: Block to copy ROR AuthApp artifacts
+    block:
+    - include_role:
+        name: ../roles/copyauthapp
+    #ignore_errors: true
+    rescue:
+      - include_role:
+          name: ../roles/send-sns-notification
+        vars:
+          status: failed to copy ror AuthApp artifacts
+      - fail:
+          msg: 'Copy ROR AuthApp Artifacts failed'
+
+- hosts: authapp-unicorn-hosts
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block for ROR-AuthApp deployment
+    block:
+    - include_role:
+        name: ../roles/ror-authapp
+    #ignore_errors: true
+    rescue:
+      - set_fact:
+          statusMessage: "failed"
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to send ror auth-app deployment failure notification
+    block:
+    - include_role:
+        name: ../roles/send-sns-notification
+      vars:
+        status: failed ror auth-app deployment
+      with_items: "{{ groups['authapp-unicorn-hosts'] }}"
+      when: hostvars[item].statusMessage == "failed"
+
+  - name: End the play if deployment fails
+    block:
+    - fail: msg="ROR AuthApp deployment failed"
+      with_items: "{{ groups['authapp-unicorn-hosts'] }}"
+      when: hostvars[item].statusMessage == "failed"
+
+  - name: Block to create AMI, LC and ASG
+    block:
+    - include_role:
+       name: ../roles/create-ami-lc-updateasg
+      with_items: "{{ ami_AuthApp_tags }}"
+    #ignore_errors: true
+    rescue:
+      - include_role:
+          name: ../roles/send-sns-notification
+        vars:
+          status: failed creating ami
+      - fail:
+          msg: 'Failed to create the AMI/LC/ASG'
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  roles:
+    - role: ../roles/send-sns-notification
+      status: success
+
+

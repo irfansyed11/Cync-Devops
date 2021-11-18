@@ -1,0 +1,4 @@
+---
+#SourceArtifactBucket: dev-cync-artifacts
+SourceArtifactName: cync_ror_{{ ror_version }}.tar.gz
+#DestinationArtifactBucket: staging-cync-artifacts

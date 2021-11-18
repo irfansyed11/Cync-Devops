@@ -1,0 +1,17 @@
+---
+- name: ssm send command for factoring and ABL
+  command: >
+    aws ssm send-command
+      --document-name "AWS-RunShellScript"
+      --document-version "{{ssm_document_version}}"
+      --targets '[{"Key":"InstanceIds","Values":["{{ssm_Instanceid}}"]}]'
+      --parameters '{"workingDirectory":["{{ssm_workingdirectory}}"],"executionTimeout":["{{ssm_executiontimeout}}"],"commands":["/bin/su -c '"'"'{{ssm_shfile}} \"{{envname}}\" \"{{item}}\"'"'"' ubuntu"]}'
+      --timeout-seconds {{ssm_timeout_seconds}}
+      --max-concurrency "{{ssm_max_concurrency}}"
+      --max-errors "{{ssm_max_errors}}"
+      --cloud-watch-output-config '{"CloudWatchOutputEnabled":true,"CloudWatchLogGroupName":"{{ssm_CloudWatchLoggroupName}}"}'
+      --region "{{regionname}}"
+  register: ssmsendcommand
+- debug:
+    msg: ssm output {{ssmsendcommand}} after execution
+

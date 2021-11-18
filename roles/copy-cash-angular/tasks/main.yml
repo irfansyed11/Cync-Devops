@@ -1,0 +1,15 @@
+---
+- name: Downloading from Source Bucket
+  aws_s3:
+   bucket: "{{ SourceArtifactBucket }}"
+   object: "/cashapp/{{ SourceArtifactName }}"
+   dest: /home/ubuntu/cash_application_angular.tar.gz
+   mode: get
+
+- name: Uploading to Destination Bucket
+  aws_s3:
+    bucket: "{{ DestinationArtifactBucket }}"
+    object: "/cashapp/{{ SourceArtifactName }}"
+    src: /home/ubuntu/cash_application_angular.tar.gz
+    mode: put
+

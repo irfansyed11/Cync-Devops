@@ -1,0 +1,96 @@
+---
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  roles:
+    - { role: ../roles/send-sns-notification, status: started }
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to check the backup counts
+    block:
+    - include_role:
+        name: ../roles/get-ami-snpshot-lc-count
+    rescue:
+    - include_role:
+        name: ../roles/send-sns-notification
+      vars:
+        status: Backup count error!
+    - fail:
+        msg: 'Failed due to the backup count error!'
+
+- hosts: jumphost
+  connection: local
+  remote_user: ubuntu
+  tasks:
+  - name: Block to copy ror cash artifacts
+    block:
+    - include_role:
+        name: ../roles/copy-cash-ror
+    #ignore_errors: true
+    rescue:
+    - include_role:
+        name: ../roles/send-sns-notification
+      vars:
+        status: failed copy ror cash artifacts
+    - fail:
+        msg: 'Copy ror cash Artifacts failed'
+
+- hosts: ror-cashapp-hosts
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block for ror cash application deployment
+    block:
+    - include_role:
+        name: ../roles/ror-cash
+      #ignore_errors: true
+    rescue:
+    - set_fact:
+        statusMessage: "failed"
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to send ror cash application deployment failure notification
+    block:
+    - include_role:
+        name: ../roles/send-sns-notification
+      vars:
+        status: failed ror cash application deployment
+      with_items: "{{ groups['ror-cashapp-hosts'] }}"
+      when: hostvars[item].statusMessage == "failed"
+
+  - name: End the play if deployment fails
+    block:
+    - fail: msg="ROR cash application deployment failed"
+      with_items: "{{ groups['ror-cashapp-hosts'] }}"
+      when: hostvars[item].statusMessage == "failed"
+
+  - name: Block to create AMI, LC and ASG
+    block:
+    - include_role:
+        name: ../roles/create-ami-lc-updateasg
+      with_items: "{{ ami_cash_tags }}"
+      #ignore_errors: true
+    rescue:
+      - include_role:
+          name: ../roles/send-sns-notification
+        vars:
+          status: failed creating ami
+      - fail:
+          msg: 'Failed to create the AMI/LC/ASG'
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  roles:
+    - role: ../roles/send-sns-notification
+      status: success
+

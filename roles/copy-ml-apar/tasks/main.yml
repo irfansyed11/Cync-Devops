@@ -1,0 +1,14 @@
+---
+- name: Downloading from Source Bucket
+  aws_s3:
+   bucket: "{{ SourcemlaparArtifactBucket }}" 
+   object: "/ml-apar/{{ SourcemlaparArtifactName }}"
+   dest: /home/ubuntu/ml-apar.gz
+   mode: get
+
+- name: Uploading to Destination Bucket
+  aws_s3:
+   bucket: "{{ DestinationmlaparArtifactBucket }}"
+   object: "/ml-apar/{{ SourcemlaparArtifactName }}"
+   src: /home/ubuntu/ml-apar.gz
+   mode: put

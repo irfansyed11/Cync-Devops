@@ -1,0 +1,14 @@
+---
+- name: Downloading from Source Bucket
+  aws_s3:
+   bucket: "{{ SourceArtifactBucket }}"
+   object: "/cashapp/{{ SourceArtifactName}}"
+   dest: /home/ubuntu/cync_ror_cash.tar.gz
+   mode: get
+
+- name: Uploading to Destination Bucket
+  aws_s3:
+    bucket: "{{ DestinationArtifactBucket }}"
+    object: "/cashapp/{{ SourceArtifactName }}"
+    src: /home/ubuntu/cync_ror_cash.tar.gz
+    mode: put

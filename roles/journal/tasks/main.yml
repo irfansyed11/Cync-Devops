@@ -1,0 +1,15 @@
+---
+- name: before removing journal folder checking journal folder size
+  shell: cd /var/log/journal/ && sudo du -h
+  register: journal
+- debug:
+    msg: "{{ journal.stdout_lines }}"
+- name: delete contents of journal folder
+  shell: sudo rm -rf /var/log/journal/*
+
+- name: after removed journal folder checking journal folder size
+  shell: cd /var/log/journal/ && sudo du -h
+  register: journal
+- debug:
+    msg: "{{ journal.stdout_lines }}"
+

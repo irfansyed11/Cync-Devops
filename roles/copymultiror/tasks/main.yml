@@ -1,0 +1,15 @@
+---
+- name: Downloading from Source Bucket
+  aws_s3:
+   bucket: "{{ SourceMulticollateralArtifactBucket }}"
+   object: "/multicollateral/{{ SourceArtifactMulticollateralName}}"
+   dest: /home/ubuntu/multi-collateral.tar.gz 
+   mode: get
+
+- name: Uploading to Destination Bucket
+  aws_s3:
+   bucket: "{{ DestinationMulticollateralArtifactBucket }}"
+   object: "/multicollateral/{{ SourceArtifactMulticollateralName }}"
+   src: /home/ubuntu/multi-collateral.tar.gz
+   mode: put
+

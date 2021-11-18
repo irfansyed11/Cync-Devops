@@ -1,0 +1,76 @@
+[tag_Name_NDS_CYNC_DEV_Penetration]
+
+
+[tag_Name_NDS_CYNC_DEV_Penetration]
+[unicorn-hosts:children]
+
+tag_Name_NDS_CYNC_DEV_Penetration
+[sidekiq-hosts:children]
+
+tag_Name_NDS_CYNC_DEV_Penetration
+[cron-hosts:children]
+
+tag_Name_NDS_CYNC_DEV_Penetration
+[angular-hosts:children]
+
+tag_Name_NDS_CYNC_DEV_Penetration
+[sidekiq-similarity-hosts]
+
+[jumphost]
+localhost
+
+[jumphost:vars]
+
+amicount=450
+lccount=175
+snapcount=550
+count=10
+bucketName=nds-cync-dev-penetration-artifacts
+sns_region=us-east-1
+sns_topic=Cync-Dev-Deployment-Notification
+sns_topic_Cashangular=NDS-CYNC-DEV-Cashapp-angular-Deployment-Notification
+envname=devror
+aws_account_id=148654267025
+regionname=us-east-1
+penetration={'tags': {'InstanceName': 'NDS-CYNC-DEV-Penetration', 'deleteami': '1'},  'noreboot': 'yes','tagState': 'green', 'tagName':'NDS-CYNC-DEV-Penetration', 'instanceType' : 'm4.2xlarge', 'autoScalingGroupName': 'NDS-CYNC-DEV-Penetration' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'15', 'createlc':'1', 'waitforami':'yes','ebsoptimized': 'yes', 'instancemonitoring': 'yes' }
+ami_tags=[penetration]
+angular_ami_tags=[penetration]
+
+keyName=EnvName
+valueName=devror
+statusMessage=success
+SourceArtifactBucket=nds-cync-dev-penetration-artifacts
+SourceArtifactAngularName=ngbuild_{{ angular_version }}.tar.gz
+SourceArtifactTermloanName=termloan_angular_ngbuild_{{ termloan_angular_version }}.tar.gz
+SourceArtifactName=cync_ror_{{ ror_version }}.tar.gz
+#SourceArtifactAngularRWName=rw_ngbuild_{{ angular_version }}.tar.gz
+DestinationArtifactBucket=rorapi-cync-artifacts
+
+[ror-hosts:vars]
+statusMessage=success
+rorArtifactBucketName=nds-cync-dev-penetration-artifacts
+rorArtifactName=cync_ror_{{ ror_version }}.tar.gz
+configFileBucket=test-artifcat
+databasefilename=pentest-database.yml
+cdnbucket=dev-rorapi-cdn
+envname=devror
+regionname=us-east-1
+MaintenanceWindowBucket=test-artifcat
+MaintenancePagePath=/var/www/html/maintenance.html
+
+[angular-hosts:vars]
+AngularArtifactBucketName=nds-cync-dev-penetration-artifacts
+statusMessage=success
+AngularArtifactName=ngbuild_{{ angular_version }}.tar.gz
+configureBucketName=test-artifcat
+angularcdnbucket=dev-cync-angular-cdn
+regionname=us-east-1
+angularPath=/opt/angular
+MaintenanceWindowBucket=test-artifcat
+MaintenancePagePath=/var/www/html/maintenance.html
+
+[ror-hosts:children]
+unicorn-hosts
+sidekiq-hosts
+cron-hosts
+#sidekiq-similarity-hosts

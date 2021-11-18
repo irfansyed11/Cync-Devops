@@ -1,0 +1,65 @@
+---
+- name: create angular_rw_env directory
+  file:
+    path: ~/angular_rw_env
+    state: directory
+    mode: 0755
+
+- name: delete contents of opt/insights directory
+  shell: rm -rf " {{ rwangularPath }}/* " #/opt/insights/*
+  #file:
+    #path: "{{ rwangularPath }}/* " #/opt/insights/*
+    #state: absent
+
+- name: download the artifact from s3 bucket
+  aws_s3:
+    bucket: "{{ AngularRWArtifactBucketName }}"
+    object: "/reportwriter/{{ AngularRWArtifactName }}"
+    dest: "{{ rwangularPath }}/insights_tar.gz" #/opt/insights/insights_tar.gz
+    mode: get
+
+- name: Download the environment configuration file from s3 bucket
+  aws_s3:
+        bucket: "{{ configureBucketName }}"
+        object: /rw-env.json
+        dest: ~/angular_rw_env/env.json
+        mode: get
+
+- name: Extract angular build
+  unarchive:
+    src: "{{ rwangularPath }}/insights_tar.gz" #/opt/insights/insights_tar.gz
+    dest: "{{ rwangularPath }}" #/opt/insights
+    remote_src: yes
+
+- name: Ensure directories are 0755
+  command: find "{{ rwangularPath }}"/assets -type d -exec chmod 0755 {} \;
+
+- name: Ensure files are 0644
+  command: find "{{ rwangularPath }}" -type f -exec chmod 0644 * {} \;
+
+
+- name: copy the configuration file to respective application folder
+  copy:
+    src: ~/angular_rw_env/env.json
+    dest: "{{ rwangularPath }}/assets/environments/env.json" #/assets/environment/env.json
+    remote_src: yes
+
+#- name: Fetch env file to local
+  #fetch:
+    #src: "{{ rwangularPath }}/assets/environments/env.json" #/assets/environment/env.json
+    #dest: ~/angular_rw_env/env.json
+    #flat: yes
+#- name: Get the ENV name
+  #set_fact:
+    #env_name: "{{ (lookup('file', '~/angular_rw_env/env.json') | from_json).get('env') }}"
+#- name: Fetch config file to local
+  #fetch:
+    #src: "{{ rwangularPath }}/assets/environments/config.{{env_name}}.json"
+    #dest: ~/angular_rw_env/config.json
+    #flat: yes
+
+- name: delete the tar.gz file
+  file:
+    path: "{{ rwangularPath }}/insights_tar.gz" #/opt/insights/insights_tar.gz
+    state: absent
+

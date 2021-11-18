@@ -1,0 +1,11 @@
+---
+- hosts: my-local
+  connection: local
+  gather_facts: false
+  tasks:
+  - name: Read YAML file
+    block:
+    - debug:
+        msg: "current PATH from ansible {{ lookup('env','PATH') }}"
+    - include_role:
+        name: ../roles/read-yaml-file

@@ -1,0 +1,14 @@
+---
+- name: Downloading from Source Bucket
+  aws_s3:
+   bucket: "{{ SourcebbcArtifactBucket }}" 
+   object: "/cync/{{ SourcebbcArtifactName }}"
+   dest: /home/ubuntu/bbc.tar.gz
+   mode: get
+
+- name: Uploading to Destination Bucket
+  aws_s3:
+   bucket: "{{ DestinationbbcArtifactBucket }}"
+   object: "/cync/{{ SourcebbcArtifactName }}"
+   src: /home/ubuntu/bbc.tar.gz
+   mode: put

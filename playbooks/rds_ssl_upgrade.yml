@@ -1,0 +1,66 @@
+---
+- hosts: all, !jumphost
+  gather_facts: false
+  become: yes
+  tasks:
+  - name: Block for ROR deployment
+    block:
+    - include_role:
+        name: ../roles/download-rds-files
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to create AMI, LC and ASG
+    block:
+    - include_role:
+       name: ../roles/create-ami-lc-updateasg
+      with_items:
+        - "{{ ami_tags }}"
+      when: ami_tags is defined
+  ignore_errors: yes
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to create AMI, LC and ASG
+    block:
+    - include_role:
+       name: ../roles/create-ami-lc-updateasg
+      with_items:
+        - "{{ ami_multiloan_tags }}"
+      when: ami_multiloan_tags is defined
+  ignore_errors: yes
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to create AMI, LC and ASG
+    block:
+    - include_role:
+       name: ../roles/create-ami-lc-updateasg
+      with_items:
+        - "{{ angular_ami_tags }}"
+      when: angular_ami_tags is defined
+  ignore_errors: yes
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to create AMI, LC and ASG
+    block:
+    - include_role:
+       name: ../roles/create-ami-lc-updateasg
+      with_items:
+        - "{{ ami_cash_tags }}"
+      when: ami_cash_tags is defined
+  ignore_errors: yes
+

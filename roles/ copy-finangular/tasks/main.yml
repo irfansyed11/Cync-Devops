@@ -1,0 +1,15 @@
+---
+- name: Downloading from Source Bucket
+  aws_s3:
+   bucket: "{{ SourceArtifactBucket }}"
+   object: "/finanalyser-angular/{{ SourceArtifactName}}"
+   dest: ~/fa-angular.tar.gz
+   mode: get
+
+- name: Uploading to Destination Bucket
+  aws_s3:
+    bucket: "{{ DestinationArtifactBucket }}"
+    object: "/finanalyser-angular/{{ SourceArtifactName }}"
+    src: /home/ubuntu/fa-angular.tar.gz
+    mode: put
+

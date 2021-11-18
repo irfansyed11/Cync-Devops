@@ -1,0 +1,60 @@
+---
+- name: "Start the deployment"
+  block:
+    - debug:
+        msg: "mserviceName: {{mircroservice_name_from_manifest}} image_info: {{image_from_manifest}} version_info: {{version_from_manifest}},cluster_info: {{ecs_cluster_name_from_manifest}}"
+    
+    - shell: ../scripts/mark_tag.sh "{{ ecr_source_aws_account }}" "{{ ecr_destination_aws_account }}" "{{ mircroservice_name_from_manifest }}" "{{ image_from_manifest }}" "{{ version_from_manifest }}" "{{ env_name}}" "{{ cross_account_role_name_from_destination_account}}" "{{ region}}" "{{ sns_topic}}"
+      register: tag_update_output
+      # failed_when: "'FAILED' in tag_update_output.stderr"
+
+    - debug:
+        msg: "Mark tag error output {{ tag_update_output.stderr}}"
+
+    - fail:
+       msg: "Tag change ecr service failed"
+      when: tag_update_output.rc != 0     
+
+    # - debug:
+    #     msg: " tag update output {{ tag_update_output}}"
+
+    - shell: ../scripts/find_and_stop_service.sh "{{ecs_cluster_name}}" "{{ mircroservice_name_from_manifest }}" "{{ecs_cluster_name_from_manifest}}" "{{ ecr_destination_aws_account }}" "{{ cross_account_role_name_from_destination_account}}" "{{ env_name}}" "{{ version_from_manifest }}" "{{ region}}" "{{ sns_topic}}"
+      register: stop_service_output
+      # failed_when: "'FAILED' in stop_service_output.stderr"
+
+    - debug:
+        msg: "stop service error output {{stop_service_output.stderr}}"      
+
+    - fail:
+       msg: "Stop ecs service failed"
+      when: stop_service_output.rc != 0
+
+
+
+       
+    # - name: Define Variable
+    #   set_fact:
+    #     last_successful_deployed_service: "{{ mircroservice_name_from_manifest }}"
+    #     last_successful_deployed_service_version: "{{ version_from_manifest }}"
+    #     last_successful_deployed_image: "{{ image_from_manifest }}"
+    #     last_successful_deployed_ecs_cluster: "{{ecs_cluster_name_from_manifest}}"
+    #   when: tag_update_output.stderr == '' and stop_service_output.stderr == ''
+
+    # - name: All successful deployed list file addition
+    #   blockinfile:
+    #     path: "{{ansible_script_location}}{{all_service_info_file_location}}{{rollback_object_name}}"
+    #     marker: ""
+    #     block: |
+    #       {{last_successful_deployed_service}}:
+    #         version: {{last_successful_deployed_service_version}}
+    #         image: {{last_successful_deployed_image}}
+    #         ecs_cluster_name_from_manifest: {{last_successful_deployed_ecs_cluster}}
+    #   when: last_successful_deployed_service is defined and last_successful_deployed_service_version is defined
+
+  # rescue:
+  #   - debug:
+  #       msg: "Exception raised!!!! "
+  #   - fail:
+  #       msg: "Stop ecs service failed"
+  #     when: stop_service_output.stderr != ''        
+  when: task_status == 'OK'    

@@ -1,0 +1,7 @@
+---
+- hosts: angular-rw-hosts
+  #become: yes
+  remote_user: ubuntu
+  roles:
+    - ../roles/rw-angular
+

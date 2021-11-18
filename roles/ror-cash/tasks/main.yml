@@ -1,0 +1,68 @@
+---
+  # Delete all the files from the cash-application folder
+- name: Delete contents from cash-application folder
+  shell: rm -rf /home/ubuntu/apps/cync-cash-application/*
+
+  #Download the artifact from the s3 bucket to the ror server
+- name: Download the artifact file from s3 bucket
+  aws_s3:
+    bucket: "{{ rorArtifactBucketName }}"
+    object: "/cashapp/{{ rorCashArtifactName }}"
+    dest: /home/ubuntu/apps/cync-cash-application/cync_ror_cash.tar.gz
+    mode: get
+- name: Ensure directories are 0755
+  command: find /home/ubuntu/apps/cync-cash-application -type d -exec chmod 0755 * {} \;
+
+# unzip the files from the downloaded artifact to the /apps folder
+- name: Extract the downloaded artifact file
+  unarchive:
+    src: /home/ubuntu/apps/cync-cash-application/cync_ror_cash.tar.gz
+    dest: /home/ubuntu/apps/cync-cash-application
+    remote_src: yes
+
+# Delete the downloaded artifact file
+- name: Delete the artifact file
+  file:
+    path: /home/ubuntu/apps/cync-cash-application/cync_ror_cash.tar.gz
+    state: absent
+
+- name: Ensure file  are 0755
+  command: find /home/ubuntu/apps/cync-cash-application/ -type f -exec chmod 0755 * {} \;
+
+- name: install gems
+  shell: bash -lc "cd /home/ubuntu/apps/cync-cash-application && bundle install --local"
+
+- name: Download the database configuration file to the respective application folder
+  aws_s3:
+    bucket: "{{ configFileBucket }}"
+    object: "{{ databasefilename }}"
+    dest: /home/ubuntu/apps/cync-cash-application/config/database.yml
+    mode: get
+
+- name: Download the adminDB configuration file to the respective application folder
+  aws_s3:
+    bucket: "{{ configFileBucket }}"
+    object: "{{ adminDBfilename }}"
+    dest: /home/ubuntu/apps/cync-cash-application/config/admin_db.yml
+    mode: get
+- name: Download the sidekiq god configuration file to the respective application folder
+  aws_s3:
+        bucket: "{{ configFileBucket }}"
+        object: "cash_app.god"
+        dest: /home/ubuntu/apps/cync-cash-application/cash_app.god
+        mode: get
+
+- name: Run DB migrations
+  command: bash -lc "cd /home/ubuntu/apps/cync-cash-application && bundle exec rake db:migrate RAILS_ENV={{ envname }}"
+
+- name: touch tmp/restart.txt
+  shell: "cd /home/ubuntu/apps/cync-cash-application/ && touch tmp/restart.txt"
+
+- name: stop sidekiq
+  command: bash -lc "cd /home/ubuntu/apps/cync-cash-application && export RAILS_ENV={{ envname }} && god terminate"
+  ignore_errors: True
+
+- name: Restart sidekiq
+  command: bash -lc "cd /home/ubuntu/apps/cync-cash-application && export RAILS_ENV={{ envname }} && god -c cash_app.god RAILS_ENV={{ envname }}"
+
+

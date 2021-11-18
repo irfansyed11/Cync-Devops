@@ -1,0 +1,14 @@
+---
+- name: Downloading from Source Bucket
+  aws_s3:
+    bucket: "{{ SourceArtifactBucket }}"
+    object: "/termloan/{{ SourceArtifactTermloanName }}"
+    dest: /home/ubuntu/termloan_tar.gz
+    mode: get
+
+- name: Uploading to Destination Bucket
+  aws_s3:
+    bucket: "{{ DestinationArtifactBucket }}"
+    object: "/termloan/{{ SourceArtifactTermloanName }}"
+    src: /home/ubuntu/termloan_tar.gz
+    mode: put

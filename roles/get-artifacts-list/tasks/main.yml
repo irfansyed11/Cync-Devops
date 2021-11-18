@@ -1,0 +1,13 @@
+---
+- name: Display S3 latest object list
+  command: python ./s3ror.py {{ bucketName }}  {{ objectname }} {{ start }} {{ count }}
+  args:
+    chdir: "{{ role_path }}/files"
+  delegate_to: localhost
+  run_once: True
+  register: show_result
+
+- name: Output
+  debug:
+    var: show_result.stdout
+

@@ -1,0 +1,14 @@
+---
+- name: Downloading from Source Bucket
+  aws_s3:
+   bucket: "{{ SourceABLArtifactBucket }}"
+   object: "/cync-abl-angular/{{ SourceABLArtifactName }}"
+   dest: /home/ubuntu/abl_application_angular.tar.gz
+   mode: get
+
+- name: Uploading to Destination Bucket
+  aws_s3:
+    bucket: "{{ DestinationABLArtifactBucket }}"
+    object: "/cync-abl-angular/{{ SourceABLArtifactName }}"
+    src: /home/ubuntu/abl_application_angular.tar.gz
+    mode: put

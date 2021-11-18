@@ -1,0 +1,160 @@
+---
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to check the backup counts
+    block:
+    - include_role:
+        name: ../roles/get-ami-snpshot-lc-count
+    rescue:
+    - include_role:
+        name: ../roles/send-sns-notification
+      vars:
+        status: Backup count error!
+    - fail:
+        msg: 'Failed due to the backup count error!'
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  roles:
+    - { role: ../roles/send-sns-notification, status: started }
+
+- hosts: angular-hosts
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to copy maintenance window page
+    block:
+    - include_role:
+        name: ../roles/copy-maintenance-window
+    rescue:
+      - set_fact:
+          statusMessage: "failed"
+
+  - name: End the play if maintenance page copy fails.
+    block:
+    - fail: msg="Deployment failed while copying maintenance window page."
+      with_items: "{{ groups['angular-hosts'] }}"
+      when: hostvars[item].statusMessage == "failed"
+
+- hosts: jumphost
+  #become: yes
+  gather_facts: False
+  remote_user: ubuntu
+  tasks:
+  - name: Block to start the similarity instance
+    block:
+    - name: start sidekiqsimilarity instance
+      when: sidekiqSimilarityTag is defined
+      local_action:
+        module: ec2
+        region: '{{ regionname }}'
+        instance_tags:
+          Name: "{{ sidekiqSimilarityTag }}"
+        state: running
+        wait: True
+    #ignore_errors: true
+    rescue:
+      - include_role:
+          name: ../roles/send-sns-notification
+        vars:
+          status: failed starting similarity instance
+      - fail:
+          msg: 'failed starting similarity instance'
+
+- hosts: ror-hosts
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block for ROR deployment
+    block:
+    - include_role:
+        name: ../roles/ror
+    #ignore_errors: true
+    rescue:
+      - set_fact:
+          statusMessage: "failed"
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to send ror deployment failure notification
+    block:
+    - include_role:
+        name: ../roles/send-sns-notification
+      vars:
+        status: failed ror deployment
+      with_items: "{{ groups['ror-hosts'] }}"
+      when: hostvars[item].statusMessage == "failed"
+
+  - name: End the play if deployment fails
+    block:
+    - fail: msg="ROR deployment failed"
+      with_items: "{{ groups['ror-hosts'] }}"
+      when: hostvars[item].statusMessage == "failed"
+
+  - name: Block to create AMI, LC and ASG
+    block:
+    - include_role:
+       name: ../roles/create-ami-lc-updateasg
+      with_items: "{{ ami_tags }}"
+    #ignore_errors: true
+    rescue:
+      - include_role:
+          name: ../roles/send-sns-notification
+        vars:
+          status: failed creating ami
+      - fail:
+          msg: 'Failed to create the AMI/LC/ASG'
+
+  - name: Block to stop similarity instance
+    block:
+    - name: Stop the similarity instance
+      when: sidekiqSimilarityTag is defined
+      local_action:
+        module: ec2
+        region: '{{ regionname }}'
+        instance_tags:
+          Name: "{{ sidekiqSimilarityTag }}"
+        state: stopped
+        wait: False
+    #ignore_errors: true
+    rescue:
+      - include_role:
+          name: ../roles/send-sns-notification
+        vars:
+          status: failed to stop similarity instance
+      - fail:
+          msg: 'Failed to stop similarity instance'
+
+- hosts: angular-hosts
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to remove maintenance window page
+    block:
+    - include_role:
+        name: ../roles/remove-maintenance-window
+    rescue:
+      - set_fact:
+          statusMessage: "failed"
+
+  - name: End the play if maintenance page removal fails.
+    block:
+    - fail: msg="Deployment failed while deleting maintenance window page."
+      with_items: "{{ groups['angular-hosts'] }}"
+      when: hostvars[item].statusMessage == "failed"
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  roles:
+    - role: ../roles/send-sns-notification
+      status: success

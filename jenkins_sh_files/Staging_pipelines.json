@@ -1,0 +1,310 @@
+{
+"STAGING_BaseROR": { 
+        "Pipeline": "NDS-CYNC-STAGING-Ror-CodePipeline-CodePipeline-XJZEO8BVQJRB", 
+        "Stack": "NDS-CYNC-STAGING-Ror-CodePipeline",
+        "codedeploy_application_name":"NDS-CYNC-STAGING-Ror-Application",
+        "deployment_group_name":"NDS-CYNC-STAGING-Ror"
+    },
+"STAGING_BaseAngular": { 
+        "Pipeline": "NDS-CYNC-STAGING-ANGULAR-Pipeline-CodePipeline-11TZP05L5HGTI", 
+        "Stack": "NDS-CYNC-STAGING-ANGULAR-Pipeline",
+        "codedeploy_application_name":"NDS-CYNC-STAGING-ANGULAR",
+        "deployment_group_name":"NDS-CYNC-STAGING-ANGULAR-Group"
+    },
+"STAGING_CashAppROR_MS": { 
+        "Pipeline": "NDS-CYNC-STAGING-MS-Cashapp-Pipeline-CodePipeline-1SCW3QCSFPPV8", 
+        "Stack": "NDS-CYNC-STAGING-MS-Cashapp-Pipeline",
+        "codedeploy_application_name":"",
+        "deployment_group_name":""
+    },
+"STAGING_CashAppAngular": { 
+        "Pipeline": "NDS-CYNC-STAGING-CashApp-ANGULAR-CodePipeline-USU5VHM07CBZ", 
+        "Stack": "NDS-CYNC-STAGING-CashApp-ANGULAR",
+        "codedeploy_application_name":"NDS-CYNC-STAGING-CashApp-ANGULAR",
+        "deployment_group_name":"NDS-CYNC-STAGING-CashApp-ANGULAR-Group"
+    },
+"STAGING_TermLoan_MS": { 
+        "Pipeline": "NDS-CYNC-STAGING-Termloan-MS-Pipeline-CodePipeline-SR00BTFY9QFS", 
+        "Stack": "NDS-CYNC-STAGING-Termloan-MS-Pipeline",
+        "codedeploy_application_name":"",
+        "deployment_group_name":""
+    },
+"STAGING_TermLoan_Jobs": { 
+        "Pipeline": "NDS-CYNC-STAGING-TermLoan-Jobs-Pipeline-CodePipeline-VHC4FKX58CMA", 
+        "Stack": "NDS-CYNC-STAGING-TermLoan-Jobs-Pipeline",
+        "codedeploy_application_name":"",
+        "deployment_group_name":""
+    },
+"STAGING_MCL_Ror": { 
+        "Pipeline": "NDS-CYNC-STAGING-MCL-Codepipeline-CodePipeline-ZRM4669FHGZ5", 
+        "Stack": "NDS-CYNC-STAGING-MCL-Codepipeline",
+        "codedeploy_application_name":"NDS-CYNC-STAGING-MCL-Application",
+        "deployment_group_name":"NDS-CYNC-STAGING-MultiLoan-Ror"
+    },
+"STAGING_CSSP_MS": { 
+        "Pipeline": "NDS-CYNC-STAGING-CSSP-Pipeline-CodePipeline-1C5LRKL3BYLRC", 
+        "Stack": "NDS-CYNC-STAGING-CSSP-Pipeline",
+        "codedeploy_application_name":"",
+        "deployment_group_name":""
+    },
+"STAGING_Auth_App": { 
+        "Pipeline": "NDS-CYNC-STAGING-AuthApp-Ror-CodePipeline-CodePipeline-PVKXC21R9CLE", 
+        "Stack": "NDS-CYNC-STAGING-AuthApp-Ror-CodePipeline",
+        "codedeploy_application_name":"NDS-CYNC-STAGING-AuthApp-Ror-Application",
+        "deployment_group_name":"NDS-CYNC-STAGING-AuthApp-Ror"
+    },
+"STAGING_Factoring_Ror": { 
+        "Pipeline": "NDS-CYNC-STAGING-Factoring-Rails6-Codepipeline-CodePipeline-16Y3BZ58JJFV2", 
+        "Stack": "NDS-CYNC-STAGING-Factoring-Rails6-Codepipeline",
+        "codedeploy_application_name":"NDS-CYNC-STAGING-Factoring-Rails6-Application",
+        "deployment_group_name":"NDS-CYNC-STAGING-Factoring-Rails6"
+    },
+"STAGING_ABL_Angular": { 
+        "Pipeline": "NDS-CYNC-STAGING-ABL-ANGULAR-Pipeline-CodePipeline-T6X3MA3X7ZJO", 
+        "Stack": "NDS-CYNC-STAGING-ABL-ANGULAR-Pipeline",
+        "codedeploy_application_name":"NDS-CYNC-STAGING-ABL-ANGULAR-Application",
+        "deployment_group_name":"NDS-CYNC-STAGING-ABL-ANGULAR"
+    },
+"STAGING_Factoring_Interest": {
+        "Pipeline": "NDS-CYNC-STAGING-Factoring-Interest-Service-Lambda-CodePipeline-1JP7I6NO42I03",
+        "Stack": "NDS-CYNC-STAGING-Factoring-Interest-Service-Lambda",
+        "codedeploy_application_name":"",
+        "deployment_group_name":""
+    },
+"STAGING_Auditapp": {
+        "Pipeline": "NDS-CYNC-STAGING-Auditapp-Pipeline-CodePipeline-LQGBSJ6APK06",
+        "Stack": "NDS-CYNC-STAGING-Auditapp-Pipeline",
+        "codedeploy_application_name":"",
+        "deployment_group_name":""
+    },
+"STAGING_ML_Apar": {
+        "Pipeline": "NDS-CYNC-STAGING-APAR-CodePipeline-CodePipeline-1M6G01TYE83E5",
+        "Stack": "NDS-CYNC-STAGING-APAR-CodePipeline",
+        "codedeploy_application_name":"NDS-CYNC-STAGING-APAR-CodePipeline",
+        "deployment_group_name":"NDS-CYNC-STAGING-APAR-CodePipeline-Group"
+    },
+"STAGING_Webhelp": {
+        "Pipeline": "NDS-CYNC-STAGING-Webhelp-Pipeline-CodePipeline-F2RNUF5KGA1W",
+        "Stack": "NDS-CYNC-STAGING-Webhelp-Pipeline",
+        "codedeploy_application_name":"NDS-CYNC-STAGING-Webhelp-Application",
+        "deployment_group_name":"NDS-CYNC-STAGING-Webhelp-Group"
+    },
+"STAGING_ABL_Reporting": {
+        "Pipeline": "NDS-CYNC-STAGING-ABL-Reporting-Pipeline-Stack-CodePipeline-IB8109X8WKKG",
+        "Stack": "NDS-CYNC-STAGING-ABL-Reporting-Pipeline-Stack",
+        "codedeploy_application_name":"",
+        "deployment_group_name":""
+    },
+"PRODSUPPORT_BaseROR": { 
+        "Pipeline": "NDS-CYNC-PRODSUPPORT-Ror-CodePipeline-CodePipeline-WYUY696TAZ00", 
+        "Stack": "NDS-CYNC-PRODSUPPORT-Ror-CodePipeline",
+        "codedeploy_application_name":"NDS-CYNC-PRODSUPPORT-Ror-Application",
+        "deployment_group_name":"NDS-CYNC-PRODSUPPORT-Ror"
+    },
+"PRODSUPPORT_BaseAngular": { 
+        "Pipeline": "NDS-CYNC-ProdSupport-Angular-STK-CodePipeline-W8XP8DGVTSQ3", 
+        "Stack": "NDS-CYNC-ProdSupport-Angular-STK",
+        "codedeploy_application_name":"NDS-CYNC-ProdSupport-Angular-Application",
+        "deployment_group_name":"NDS-CYNC-ProdSupport-Angular-Group"
+    },
+"PRODSUPPORT_CashAppROR_MS": { 
+        "Pipeline": "NDS-CYNC-PRODSUPPORT-CashApp-MS-Pipeline-CodePipeline-UB31RPW9CSVK", 
+        "Stack": "NDS-CYNC-PRODSUPPORT-CashApp-MS-Pipeline",
+        "codedeploy_application_name":"",
+        "deployment_group_name":""
+    },
+"PRODSUPPORT_CashAppAngular": { 
+        "Pipeline": "NDS-CYNC-PRODSUPPORT-CashApp-ANGULAR-Codepipeline-CodePipeline-WWW6BBFZ96MR", 
+        "Stack": "NDS-CYNC-PRODSUPPORT-CashApp-ANGULAR-Codepipeline",
+        "codedeploy_application_name":"NDS-CYNC-PRODSUPPORT-CashApp-ANGULAR-Application",
+        "deployment_group_name":"NDS-CYNC-PRODSUPPORT-CashApp-ANGULAR-Group"
+    },
+"PRODSUPPORT_TermLoan_Angular": { 
+        "Pipeline": "NDS-CYNC-PRODSUPPORT-TERMLOAN-ANGULAR-Pipeline-CodePipeline-IACKMZIRVWLC", 
+        "Stack": "NDS-CYNC-PRODSUPPORT-TERMLOAN-ANGULAR-Pipeline",
+        "codedeploy_application_name":"NDS-CYNC-PROSUPPORT-TERMLOAN-ANGULAR",
+        "deployment_group_name":"NDS-CYNC-PRODSUPPORT-TERMLOAN-ANGULAR-Group"
+    },
+"PRODSUPPORT_MCL_Ror": { 
+        "Pipeline": "NDS-CYNC-PRODSUPPORT-MCL-Codepipeline-CodePipeline-1AVET4XJECJ74", 
+        "Stack": "NDS-CYNC-PRODSUPPORT-MCL-Codepipeline",
+        "codedeploy_application_name":"NDS-CYNC-PRODSUPPORT-MCL-Application",
+        "deployment_group_name":"NDS-CYNC-PRODSUPPORT-MCL"
+    },
+"PRODSUPPORT_Auth_App": { 
+        "Pipeline": "NDS-CYNC-PRODSUPPORT-Auth-App-Ror-Pipeline-CodePipeline-1RUR0XZ397I7T", 
+        "Stack": "NDS-CYNC-PRODSUPPORT-Auth-App-Ror-Pipeline",
+        "codedeploy_application_name":"NDS-CYNC-PRODSUPPORT-Auth-App-Ror-Application",
+        "deployment_group_name":"NDS-CYNC-PRODSUPPORT-Auth-App-Ror"
+    },
+"PRODSUPPORT_Factoring_Ror": { 
+        "Pipeline": "NDS-CYNC-PRODSUPPORT-Factoring-Rails6-Pipeline-CodePipeline-OOE6YAB5WPLN", 
+        "Stack": "NDS-CYNC-PRODSUPPORT-Factoring-Rails6-Pipeline",
+        "codedeploy_application_name":"NDS-CYNC-PRODSUPPORT-Factoring-Rails6-Application",
+        "deployment_group_name":"NDS-CYNC-PRODSUPPORT-Factoring-Rails6"
+    },
+
+"PRODSUPPORT_Termloan_MS": {
+        "Pipeline": "NDS-CYNC-PRODSUPPORT-Termloan-MS-Pipeline-CodePipeline-IXFFZ4UINGZ6",
+        "Stack": "NDS-CYNC-PRODSUPPORT-Termloan-MS-Pipeline",
+        "codedeploy_application_name":"",
+        "deployment_group_name":""
+    },
+
+"PRESTAGING_BaseROR": { 
+        "Pipeline": "NDS-CYNC-PRESTAGING-Ror-Pipeline-CodePipeline-A8HJK5DVYGQM", 
+        "Stack": "NDS-CYNC-PRESTAGING-Ror-Pipeline",
+        "codedeploy_application_name":"NDS-CYNC-PRESTAGING-Ror-Application",
+        "deployment_group_name":"NDS-CYNC-PRESTAGING-Ror"
+    },
+"PRESTAGING_BaseAngular": { 
+        "Pipeline": "NDS-CYNC-PRESTAGING-Angular-Stack-CodePipeline-1U4QYC2UIOXB6", 
+        "Stack": "NDS-CYNC-PRESTAGING-Angular-Stack",
+        "codedeploy_application_name":"NDS-CYNC-PRESTAGING-Angular-Application",
+        "deployment_group_name":"NDS-CYNC-PRESTAGING-Angular-Group"
+    },
+"PRESTAGING_CashAppROR_MS": { 
+        "Pipeline": "NDS-CYNC-PRESTAGING-Cashapp-MS-Pipeline-CodePipeline-PNBOS2RJQPAU", 
+        "Stack": "NDS-CYNC-PRESTAGING-Cashapp-MS-Pipeline",
+        "codedeploy_application_name":"",
+        "deployment_group_name":""
+    },
+"PRESTAGING_CashAppAngular": { 
+        "Pipeline": "NDS-CYNC-PRESTAGING-Cashapp-Angular-Pipeline-CodePipeline-1Q0K8MRLEVN4O", 
+        "Stack": "NDS-CYNC-PRESTAGING-Cashapp-Angular-Pipeline",
+        "codedeploy_application_name":"NDS-CYNC-PRESTAGING-Cashapp-Angular-Application",
+        "deployment_group_name":"NDS-CYNC-PRESTAGING-Cashapp-Angular-Group"
+    },
+"PRESTAGING_TermLoan_MS": { 
+        "Pipeline": "NDS-CYNC-PRESTAGING-Term-Loan-Pipeline-Stack-CodePipeline-SO1T1P9D3LNI", 
+        "Stack": "NDS-CYNC-PRESTAGING-Term-Loan-Pipeline-Stack",
+        "codedeploy_application_name":"",
+        "deployment_group_name":""
+    },
+"PRESTAGING_TermLoan_Angular": { 
+        "Pipeline": "NDS-CYNC-PRESTAGING-TermLoan-Angular-codepipeline-CodePipeline-1IFYNHLLDIFNB", 
+        "Stack": "NDS-CYNC-PRESTAGING-TermLoan-Angular-codepipeline",
+        "codedeploy_application_name":"NDS-CYNC-PRESTAGING-Termloan-Angular-Application",
+        "deployment_group_name":"NDS-CYNC-PRESTAGING-Termloan-Angular-Group"
+    },
+"PRESTAGING_MCL_Ror": { 
+        "Pipeline": "NDS-CYNC-PRESTAGING-Multi-Loan-ROR-Stack-CodePipeline-19YEA7JBBZUQE", 
+        "Stack": "NDS-CYNC-PRESTAGING-Multi-Loan-ROR-Stack",
+        "codedeploy_application_name":"NDS-CYNC-PRESTAGING-Multi-Loan-ROR-Application",
+        "deployment_group_name":"NDS-CYNC-PRESTAGING-Multi-Loan-ROR-Group"
+    },
+"PRESTAGING_Auth_App": { 
+        "Pipeline": "NDS-CYNC-PRESTAGING-Auth-App-Ror-Pipeline-CodePipeline-16ZA8IC7EZKAW", 
+        "Stack": "NDS-CYNC-PRESTAGING-Auth-App-Ror-Pipeline",
+        "codedeploy_application_name":"NDS-CYNC-PRESTAGING-Auth-App-Ror-Application",
+        "deployment_group_name":"NDS-CYNC-PRESTAGING-Auth-App-Ror"
+    },
+"PRESTAGING_Factoring_Ror": { 
+        "Pipeline": "NDS-CYNC-PRESTAGING-Factoring-Rails6-Pipeline-CodePipeline-X7SHXYGCRBC5", 
+        "Stack": "NDS-CYNC-PRESTAGING-Factoring-Rails6-Pipeline",
+        "codedeploy_application_name":"NDS-CYNC-PRESTAGING-Factoring-Rails6-Application",
+        "deployment_group_name":"NDS-CYNC-PRESTAGING-Factoring-Rails6"
+    },
+"PRESTAGING_ABL_Angular": { 
+        "Pipeline": "NDS-CYNC-PRESTAGING-ABL-ANGULAR-Pipeline-CodePipeline-EN4BUQ47XNQH", 
+        "Stack": "NDS-CYNC-PRESTAGING-ABL-ANGULAR-Pipeline",
+        "codedeploy_application_name":"NDS-CYNC-PRESTAGING-ABL-ANGULAR-Application",
+        "deployment_group_name":"NDS-CYNC-PRESTAGING-ABL-ANGULAR"
+    },
+"PRESTAGING_Termloan_Jobs": {
+        "Pipeline": "NDS-CYNC-PRESTAGING-Termloan-Jobs-Pipeline-CodePipeline-167Q73VOK2665",
+        "Stack": "NDS-CYNC-PRESTAGING-Termloan-Jobs-Pipeline",
+        "codedeploy_application_name":"",
+        "deployment_group_name":""
+    },
+"PRESTAGING_Auditapp": {
+        "Pipeline": "NDS-CYNC-PRESTAGING-Auditapp-Pipeline-CodePipeline-16H0GX1ECUQZ8",
+        "Stack": "NDS-CYNC-PRESTAGING-Auditapp-Pipeline",
+        "codedeploy_application_name":"",
+        "deployment_group_name":""
+    },
+"PRESTAGING_Webhelp": {
+        "Pipeline": "NDS-CYNC-PRESTAGING-Webhelp-Pipeline-CodePipeline-1XF34VAKD8BCL",
+        "Stack": "NDS-CYNC-PRESTAGING-Webhelp-Pipeline",
+        "codedeploy_application_name":"NDS-CYNC-PRESTAGING-Webhelp-Application",
+        "deployment_group_name":"NDS-CYNC-PRESTAGING-Webhelp-Group"
+    },
+
+"AUTOMATION_BaseROR": { 
+            "Pipeline": "NDS-CYNC-AUTOMATION-ROR-Pipeline-CodePipeline-18PATD8QMJ5F", 
+            "Stack": "NDS-CYNC-AUTOMATION-ROR-Pipeline",
+            "codedeploy_application_name":"NDS-CYNC-AUTOMATION-BASE-ROR",
+            "deployment_group_name":"NDS-CYNC-AUTOMATION-BASE-ROR"
+        },
+"AUTOMATION_BaseAngular": { 
+            "Pipeline": "NDS-CYNC-AUTOMATION-ANGULAR-Pipeline-CodePipeline-NUCKC5ZAERGT", 
+            "Stack": "NDS-CYNC-AUTOMATION-ANGULAR-Pipeline",
+            "codedeploy_application_name":"NDS-CYNC-AUTOMATION-ANGULAR",
+            "deployment_group_name":"NDS-CYNC-AUTOMATION-ANGULAR"
+        },
+"AUTOMATION_CashAppROR_MS": { 
+            "Pipeline": "NDS-CYNC-AUTOMATION-Cashapp-MS-Pipeline-Infra-Stk-CodePipeline-WNATAOYJW7AZ", 
+            "Stack": "NDS-CYNC-AUTOMATION-Cashapp-MS-Pipeline-Infra-Stk"
+        },
+"AUTOMATION_CashAppAngular": { 
+            "Pipeline": "NDS-CYNC-AUTOMATION-CashApp-ANGULAR-Pipeline-CodePipeline-VHRPUN1P3CNS",
+            "Stack": "NDS-CYNC-AUTOMATION-CashApp-ANGULAR-Pipeline",
+            "codedeploy_application_name":"NDS-CYNC-AUTOMATION-CASH-APP-ANGULAR",
+            "deployment_group_name":"NDS-CYNC-AUTOMATION-CASH-APP-ANGULAR"
+        },
+"AUTOMATION_TermLoan_MS": { 
+            "Pipeline": "NDS-CYNC-AUTOMATION-Termloan-MS-Pipeline-Stk-CodePipeline-1BBVIB071IBLQ", 
+            "Stack": "NDS-CYNC-AUTOMATION-Termloan-MS-Pipeline-Stk"
+        },
+"AUTOMATION_TermLoan_Angular": { 
+            "Pipeline": "NDS-CYNC-AUTOMATION-TERM-LOAN-ANGULAR-Pipeline-CodePipeline-IN6ZNGIFBACH", 
+            "Stack": "NDS-CYNC-AUTOMATION-TERM-LOAN-ANGULAR-Pipeline",
+            "codedeploy_application_name":"NDS-CYNC-AUTOMATION-TermLoan-Angular",
+            "deployment_group_name":"NDS-CYNC-AUTOMATION-TermLoan-Angular"
+        },
+"AUTOMATION_MCL_Ror": { 
+            "Pipeline": "NDS-CYNC-AUTOMATION-MCL-Pipeline-CodePipeline-1CJTDOSEVCS8Z", 
+            "Stack": "NDS-CYNC-AUTOMATION-MCL-Pipeline",
+            "codedeploy_application_name":"NDS-CYNC-AUTOMATION-MCL-ROR-Application",
+            "deployment_group_name":"NDS-CYNC-AUTOMATION-MCL-ROR"
+        },
+"AUTOMATION_Auth_App": { 
+            "Pipeline": "NDS-CYNC-AUTOMATION-AUTH-APP-Ror-Pipeline-CodePipeline-4WUOSYMSKRGV", 
+            "Stack": "NDS-CYNC-AUTOMATION-AUTH-APP-Ror-Pipeline",
+            "codedeploy_application_name":"NDS-CYNC-AUTOMATION-AUTH-APP-Ror-Application",
+            "deployment_group_name":"NDS-CYNC-AUTOMATION-AUTH-APP-Ror"
+        },
+"AUTOMATION_Factoring_Ror": { 
+            "Pipeline": "NDS-CYNC-AUTOMATION-Factoring-Rails6-Pipeline-CodePipeline-520KN3R26GB2", 
+            "Stack": "NDS-CYNC-AUTOMATION-Factoring-Rails6-Pipeline",
+            "codedeploy_application_name":"NDS-CYNC-AUTOMATION-FACTORING-RAILS6-Application",
+            "deployment_group_name":"NDS-CYNC-AUTOMATION-FACTORING-RAILS6"
+        },
+"AUTOMATION_ABL_Angular": { 
+            "Pipeline": "NDS-CYNC-AUTOMATION-ABL-ANGULAR-Pipeline-CodePipeline-1COAON98HVIK7", 
+            "Stack": "NDS-CYNC-AUTOMATION-ABL-ANGULAR-Pipeline",
+            "codedeploy_application_name":"NDS-CYNC-AUTOMATION-ABL-ANGULAR-Application",
+            "deployment_group_name":"NDS-CYNC-UAT-ABL-ANGULAR"
+        },
+"AUTOMATION_Termloan_Jobs": {
+            "Pipeline": "NDS-CYNC-AUTOMATION-Termloan-Jobs-Pipeline-Stk-CodePipeline-1BCGG2NUH9OMI",
+            "Stack": "NDS-CYNC-AUTOMATION-Termloan-Jobs-Pipeline-Stk"
+        },
+"AUTOMATION_Auditapp": {
+            "Pipeline": "NDS-CYNC-AUTOMATION-Auditapp-Pipeline-Infra-CodePipeline-M7G9ECV80464",
+            "Stack": "NDS-CYNC-AUTOMATION-Auditapp-Pipeline-Infra"
+        },
+"AUTOMATION_Factoring_Interest": {
+            "Pipeline": "NDS-CYNC-AUTOMATION-Factoring-Interest-Service-Lambda-Pipeline-CodePipeline-FPDK9AKAT5OD",
+            "Stack": "NDS-CYNC-AUTOMATION-Factoring-Interest-Service-Lambda-Pipeline"
+            },
+"AUTOMATION_BBC": {
+            "Pipeline": "NDS-CYNC-AUTOMATION-BBC-Pipeline-CodePipeline-IUUKXTDVV8HM",
+            "Stack": "NDS-CYNC-AUTOMATION-BBC-Pipeline"
+            },
+"AUTOMATION_Webhelp": {
+        "Pipeline": "NDS-CYNC-AUTOMATION-WEBHELP-Pipeline-CodePipeline-6DYK9CFVYGVQ",
+        "Stack": "NDS-CYNC-AUTOMATION-WEBHELP-Pipeline"
+    }
+
+}

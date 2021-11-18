@@ -1,0 +1,98 @@
+---
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  roles:
+    - { role: ../roles/send-sns-notification, status: started }
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to check the backup counts
+    block:
+    - include_role:
+        name: ../roles/get-ami-snpshot-lc-count
+    rescue:
+    - include_role:
+        name: ../roles/send-sns-notification
+      vars:
+        status: Backup count error!
+    - fail:
+        msg: 'Failed due to the backup count error!'
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to put uptimerobot maintainance
+    block:
+    - include_role:
+        name: ../roles/put-uptime-robot-mwindow
+      vars:
+        app_name: "ABL-Ang"         
+    rescue:
+    - include_role:
+        name: ../roles/send-sns-notification
+      vars:
+        status: Putting MWindow on Uptimerobot failed!
+    - fail:
+        msg: 'Putting MWindow on Uptimerobot failed!'
+
+- hosts: angular-abl-hosts
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block for abl angular deployment
+    block:
+    - include_role:
+        name: ../roles/abl-angular
+    #ignore_errors: true
+    rescue:
+      - set_fact:
+          statusMessage: "failed"
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to send abl angular deployment notification
+    block:
+    - include_role:
+        name: ../roles/send-sns-notification
+      vars:
+        status: failed abl angular deployment
+      with_items: "{{ groups['angular-abl-hosts'] }}"
+      when: hostvars[item].statusMessage == "failed"
+
+  - name: End the play if deployment fails
+    block:
+    - fail: msg="abl Angular deployment failed"
+      with_items: "{{ groups['angular-abl-hosts'] }}"
+      when: hostvars[item].statusMessage == "failed"
+  
+  - name: Block to create AMI, LC and ASG
+    block:
+    - include_role:
+         name: ../roles/create-ami-lc-updateasg
+      with_items: "{{ ami_abl_angular_tags }}"
+    #ignore_errors: true
+    rescue:
+      - include_role:
+          name: ../roles/send-sns-notification
+        vars:
+          status: failed creating ami/lc/asg
+      - fail:
+          msg: 'Failed to create the AMI/LC/ASG'
+         
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  roles:
+    - role: ../roles/send-sns-notification
+      status: success

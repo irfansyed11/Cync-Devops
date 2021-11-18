@@ -1,0 +1,108 @@
+---
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to check the backup counts
+    block:
+    - include_role:
+        name: ../roles/get-ami-snpshot-lc-count
+    rescue:
+    - include_role:
+        name: ../roles/send-sns-notification
+      vars:
+        status: Backup count error!
+    - fail:
+        msg: 'Failed due to the backup count error!'
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  roles:
+    - { role: ../roles/send-sns-notification, status: started }
+
+
+- hosts: webhelp-hosts
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block for webhelp deployment
+    block:
+    - include_role:
+        name: ../roles/webhelp
+    #ignore_errors: true
+    rescue:
+      - set_fact:
+          statusMessage: "failed"
+
+- hosts: ror-hosts
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block for updating mapping.csv file in unicorn hosts
+    block:
+    - include_role:
+        name: ../roles/mapping
+    #ignore_errors: true
+    rescue:
+      - set_fact:
+          statusMessage: "failed"
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  tasks:
+  - name: Block to send webhelp deployment notification
+    block:
+    - include_role:
+        name: ../roles/send-sns-notification
+      vars:
+        status: failed webhelp deployment
+      with_items: "{{ groups['webhelp-hosts'] }}"
+      when: hostvars[item].statusMessage == "failed"
+
+  - name: End the play if deployment fails
+    block:
+    - fail: msg="Webhelp deployment failed"
+      with_items: "{{ groups['webhelp-hosts'] }}"
+      when: hostvars[item].statusMessage == "failed"
+
+  - name: Block to create AMI, LC and ASG of Webhelp
+    block:
+    - include_role:
+        name: ../roles/create-ami-lc-updateasg
+      with_items: "{{ ami_webhelp_tags }}"
+    #ignore_errors: true
+    rescue:
+      - include_role:
+          name: ../roles/send-sns-notification
+        vars:
+          status: webhelp deployment successful, failed to create ami/lc/asg
+      - fail:
+          msg: 'Failed to create the AMI/LC/ASG'
+    
+  - name: Block to create AMI, LC and ASG of base app unicorn
+    when: envname == 'staging' or envname == 'automation'
+    block:
+    - include_role:
+        name: ../roles/create-ami-lc-updateasg
+      with_items: "{{ ami_base_unicorn_tags }}"
+    #ignore_errors: true
+    rescue:
+      - include_role:
+          name: ../roles/send-sns-notification
+        vars:
+          status: webhelp deployment successful, failed to create ami/lc/asg
+      - fail:
+          msg: 'Failed to create the AMI/LC/ASG'
+
+- hosts: jumphost
+  connection: local
+  gather_facts: false
+  remote_user: ubuntu
+  roles:
+    - role: ../roles/send-sns-notification
+      status: success

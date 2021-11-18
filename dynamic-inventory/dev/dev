@@ -1,0 +1,148 @@
+[tag_Name_NDS_CYNC_DEV_New_Ubuntu18]
+
+[tag_Name_NDS_CYNC_DEV_New_CashApp_Passenger]
+         
+[unicorn-hosts:children]
+tag_Name_NDS_CYNC_DEV_New_Ubuntu18
+
+[sidekiq-hosts:children]
+tag_Name_NDS_CYNC_DEV_New_Ubuntu18
+
+
+[cron-hosts:children]
+tag_Name_NDS_CYNC_DEV_New_Ubuntu18
+
+[sidekiq-similarity-hosts]
+
+
+[angular-hosts:children]
+tag_Name_NDS_CYNC_DEV_New_Ubuntu18
+
+[angular-term-loan-hosts:children]
+tag_Name_NDS_CYNC_DEV_New_Ubuntu18
+
+[jumphost]
+localhost
+
+[ror-cashapp-hosts:children]
+tag_Name_NDS_CYNC_DEV_New_CashApp_Passenger
+
+
+[angular-rw-hosts:children]
+tag_Name_NDS_CYNC_DEV_New_Ubuntu18
+
+[angular-fa-hosts:children]
+tag_Name_NDS_CYNC_DEV_New_Ubuntu18
+
+[angular-cash-hosts:children]
+tag_Name_NDS_CYNC_DEV_New_Ubuntu18
+
+
+[jumphost:vars]
+
+amicount=450
+lccount=175
+snapcount=550
+count=10
+bucketName=dev-cync-artifacts
+sns_region=us-east-1
+sns_topic=Cync-Dev-Deployment-Notification
+sns_topic_Cashangular=NDS-CYNC-DEV-Cashapp-angular-Deployment-Notification
+envname=devror
+aws_account_id=148654267025
+regionname=us-east-1
+#sidekiqSimilarityTag=CYNC-Dev-Sidekiq-Similarity
+#angular={'tags': {'InstanceName': 'angular', 'deleteami': '1'}, 'tagState': 'green', 'tagName': 'angular', 'instanceType' : '', 'autoScalingGroupName': '' ,'devicename': '' ,'devicetype': '' ,'size':'', 'createlc':'0', 'ebsoptimized': 'yes', 'instancemonitoring': 'yes',,'metricscollection':'yes','terminationpolicy': 'NewestInstance' }
+#sidekiq={'tags': {'Name': 'sidekiq', 'State': 'green'}, 'tagState': 'green', 'tagName': 'sidekiq', 'instanceType' : '', 'autoScalingGroupName': '' ,'devicename': '' ,'devicetype': '' ,'size':'', 'createlc':'0','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes','metricscollection':'yes' }
+#cron={'tags': {'Name': 'cron', 'State': 'green'}, 'tagState': 'green', 'tagName': 'cron', 'instanceType' : '', 'autoScalingGroupName': '' ,'devicename': '' ,'devicetype': '' ,'size':'', 'createlc':'0','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes' }
+
+cyncinstance={'tags': {'Name': 'NDS-CYNC-DEV-New-Ubuntu18', 'Environment': 'DEV', 'deleteami': '1'}, 'noreboot': 'yes','tagState': 'green', 'tagName': 'NDS-CYNC-DEV-New-Ubuntu18', 'instanceType' : '', 'autoScalingGroupName': '' ,'devicename': '' ,'devicetype': '' ,'size':'', 'createlc':'0', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes' }
+sidekiqsimilarity={'tags': {'InstanceName': 'sidekiqsimilarity', 'deleteami': '1'},  'noreboot': 'yes','tagState': 'green', 'tagName':'CYNC-Dev-Sidekiq-Similarity', 'instanceType' : 'm4.large', 'autoScalingGroupName': 'CYNC-Dev-Sidekiq-Similarity-Asg' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'8', 'createlc':'1', 'waitforami':'yes','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes' }
+
+rorcash={'tags': {'InstanceName': 'NDS-CYNC-DEV-New-Ubuntu18', 'Environment': 'DEV', 'deleteami': '1'},'noreboot': 'yes', 'tagState': 'green', 'tagName':'NDS-CYNC-DEV-New-Ubuntu18', 'instanceType' : '', 'autoScalingGroupName': '' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'8', 'createlc':'0', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes','metricscollection':'yes' }
+
+ami_tags=["{{cyncinstance}}"]
+angular_ami_tags=["{{cyncinstance}}"]
+ami_cash_tags=["{{rorcash}}"]
+
+#bucketName=cync-artifacts
+keyName=EnvName
+valueName=devror
+
+statusMessage=success
+SourceArtifactBucket=dev-cync-artifacts
+SourceArtifactAngularName=ngbuild_{{ angular_version }}.tar.gz
+SourceArtifactTermloanName=termloan_angular_ngbuild_{{ termloan_angular_version }}.tar.gz
+SourceArtifactName=cync_ror_{{ ror_version }}.tar.gz
+#SourceArtifactAngularRWName=rw_ngbuild_{{ angular_version }}.tar.gz
+DestinationArtifactBucket=rorapi-cync-artifacts
+
+[ror-hosts:vars]
+statusMessage=success
+rorArtifactBucketName=dev-cync-artifacts
+rorArtifactName=cync_ror_{{ ror_version }}.tar.gz
+configFileBucket=test-artifcat
+databasefilename=database.yml
+cdnbucket=dev-rorapi-cdn
+envname=devror
+regionname=us-east-1
+
+[ror-cashapp-hosts:vars]
+rorArtifactBucketName=dev-cync-artifacts
+rorCashArtifactName=cync_cash_{{ cashapp_version }}.tar.gz
+envname=devror
+configFileBucket=test-artifcat
+databasefilename=cash-database.yml
+regionname=us-east-1
+statusMessage=success
+
+[angular-hosts:vars]
+AngularArtifactBucketName=dev-cync-artifacts
+statusMessage=success
+AngularArtifactName=ngbuild_{{ angular_version }}.tar.gz
+configureBucketName=test-artifcat
+angularcdnbucket=dev-cync-angular-cdn
+regionname=us-east-1
+angularPath=/opt/angular
+MaintenanceWindowBucket=test-artifcat
+MaintenancePagePath=/var/www/html/maintenance.html
+
+[angular-rw-hosts:vars]
+AngularRWArtifactBucketName=dev-cync-artifacts
+rwangularPath=/opt/insights
+configureBucketName=test-artifcat
+statusMessage=success
+regionname=us-east-1
+AngularRWArtifactName=rw_ngbuild_{{ rw_angular_version }}.tar.gz
+
+[angular-fa-hosts:vars]
+AngularFaArtifactBucketName=dev-cync-artifacts
+configureBucketName=test-artifcat
+faangularPath=/opt/financial
+statusMessage=completed
+AngularFaArtifactName=fa_ngbuild_{{ financial_angular_version }}.tar.gz
+
+[angular-cash-hosts:vars]
+#cashangularPath=/opt/cash-application
+AngularCashArtifactBucketName=dev-cync-artifacts
+AngularCashArtifactName=cashapp_ngbuild_{{ cashapp_angular_version }}.tar.gz
+statusMessage=completed
+configureBucketName=test-artifcat
+cashangularpath=/opt/cash-application-angular
+
+[angular-term-loan-hosts:vars]
+AngularTermLoanArtifactBucketName=dev-cync-artifacts
+statusMessage=success
+AngularTermLoanArtifactName=termloan_angular_ngbuild_{{ termloan_angular_version }}.tar.gz
+configureBucketName=test-artifcat
+regionname=us-east-1
+termloanpath=/opt/term-loan 
+
+[ror-hosts:children]
+unicorn-hosts
+sidekiq-hosts
+cron-hosts
+#sidekiq-similarity-hosts
+
+
+

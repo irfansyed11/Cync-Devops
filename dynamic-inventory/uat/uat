@@ -1,0 +1,174 @@
+[tag_Name_NDS_CYNC_UAT_UNICORN_SRVR]
+
+[tag_Name_NDS_CYNC_UAT_SIDEKIQ_SRVR]
+
+[tag_Name_NDS_CYNC_UAT_CRON_SRVR]
+
+[tag_Name_NDS_CYNC_UAT_NGINX_SRVR]
+
+[tag_Name_NDS_CYNC_UAT_CASH_APP_SRVR]
+
+[tag_Name_NDS_CYNC_UAT_MCL_SRVR]
+
+[tag_Name_NDS_CYNC_UAT_SIDEKIQSIM_SRVR]
+
+[unicorn-hosts:children]
+tag_Name_NDS_CYNC_UAT_UNICORN_SRVR
+
+[sidekiq-hosts:children]
+tag_Name_NDS_CYNC_UAT_SIDEKIQ_SRVR
+
+[cron-hosts:children]
+tag_Name_NDS_CYNC_UAT_CRON_SRVR
+
+[angular-hosts:children]
+tag_Name_NDS_CYNC_UAT_NGINX_SRVR
+
+[angular-rw-hosts:children]
+tag_Name_NDS_CYNC_UAT_NGINX_SRVR
+
+[ror-cashapp-hosts:children]
+tag_Name_NDS_CYNC_UAT_CASH_APP_SRVR
+
+[angular-cash-hosts:children]
+tag_Name_NDS_CYNC_UAT_CASH_APP_SRVR
+
+[angular-fa-hosts:children]
+tag_Name_NDS_CYNC_UAT_NGINX_SRVR
+
+[angular-term-loan-hosts:children]
+tag_Name_NDS_CYNC_UAT_NGINX_SRVR
+
+[multi-collateral-loan-hosts:children]
+tag_Name_NDS_CYNC_UAT_MCL_SRVR
+ 
+[sidekiq-similarity-hosts:children]
+tag_Name_NDS_CYNC_UAT_SIDEKIQSIM_SRVR
+
+[jumphost]
+localhost
+
+[jumphost:vars]
+amicount=450
+lccount=175
+snapcount=550
+count=10
+bucketName=nds-cync-uat-artifacts
+sns_region=us-east-1
+sns_topic=NDS-CYNC-UAT-DEPLOYMENT-NOTIFICATIONS
+envname=uat
+aws_account_id=436415935402
+regionname=us-east-1
+sidekiqSimilarityTag=NDS-CYNC-UAT-SIDEKIQSIM-SRVR
+nginx={'tags': {'InstanceName': 'NDS-CYNC-UAT-NGINX-SRVR', 'deleteami': '1'},'noreboot': 'yes', 'tagState': 'Blue', 'tagName':'NDS-CYNC-UAT-NGINX-SRVR', 'instanceType' : 't2.medium', 'autoScalingGroupName': 'NDS-CYNC-UAT-Nginx-ASG' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'20', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes' }
+
+cron={'tags': {'InstanceName': 'NDS-CYNC-UAT-CRON-SRVR', 'deleteami': '1'},'noreboot': 'yes', 'tagState': 'Blue', 'tagName':'NDS-CYNC-UAT-CRON-SRVR', 'instanceType' : 'r4.large', 'autoScalingGroupName': 'NDS-CYNC-UAT-Cron-ASG' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'20', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes' }
+
+sidekiqsimilarity={'tags': {'InstanceName': 'NDS-CYNC-UAT-SIDEKIQSIM-SRVR', 'deleteami': '1'},'noreboot': 'yes', 'tagState': 'Blue', 'tagName':'NDS-CYNC-UAT-SIDEKIQSIM-SRVR', 'instanceType' : 'm5.4xlarge', 'autoScalingGroupName': 'NDS-CYNC-UAT-Sidekiqsim-ASG' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'20', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes' }
+
+sidekiq={'tags': {'InstanceName': 'NDS-CYNC-UAT-SIDEKIQ-SRVR', 'deleteami': '1'},'noreboot': 'yes', 'tagState': 'Blue', 'tagName':'NDS-CYNC-UAT-SIDEKIQ-SRVR', 'instanceType' : 'm5.2xlarge', 'autoScalingGroupName': 'NDS-CYNC-UAT-Sidekiq-ASG' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'20', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes' }
+
+unicorn={'tags': {'InstanceName': 'NDS-CYNC-UAT-UNICORN-SRVR', 'deleteami': '1'},'noreboot': 'yes', 'tagState': 'Blue', 'tagName':'NDS-CYNC-UAT-UNICORN-SRVR', 'instanceType' : 'r4.large', 'autoScalingGroupName': 'NDS-CYNC-UAT-Unicorn-ASG' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'20', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes' }
+
+rorcash={'tags': {'InstanceName': 'NDS-CYNC-UAT-CASH-APP-SRVR', 'deleteami': '1'},'noreboot': 'yes', 'tagState': 'Blue', 'tagName':'NDS-CYNC-UAT-CASH-APP-SRVR', 'instanceType' : 't3.xlarge', 'autoScalingGroupName': 'NDS-CYNC-UAT-CashApp-ASG' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'20', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes' }
+
+multiloan={'tags': {'InstanceName': 'NDS-CYNC-UAT-MCL-SRVR', 'deleteami': '1'},'noreboot': 'yes', 'tagState': 'Blue', 'tagName':'NDS-CYNC-UAT-MCL-SRVR', 'instanceType' : 't3.xlarge', 'autoScalingGroupName': 'NDS-CYNC-UAT-MCL-ASG' ,'devicename': '/dev/sda1' ,'devicetype': 'gp2' ,'size':'20', 'createlc':'1', 'waitforami':'no','ebsoptimized': 'yes', 'instancemonitoring': 'yes' }
+
+ami_multiloan_tags=["{{multiloan}}"]
+
+ami_tags=["{{sidekiqsimilarity}}","{{sidekiq}}","{{cron}}","{{unicorn}}"]
+ami_cash_tags=["{{rorcash}}"]
+angular_ami_tags=["{{nginx}}"]
+keyName=EnvName
+valueName=uat
+
+statusMessage=success
+SourceArtifactBucket=staging-cync-artifacts
+SourceArtifactTermloanName=termloan_angular_ngbuild_{{ termloan_angular_version }}.tar.gz
+DestinationArtifactBucket=nds-cync-uat-artifacts
+SourceArtifactMulticollateralName=cync_multi_collateral_{{ multiloanror_version }}.tar.gz
+count=10
+bucketname=nds-cync-uat-artifacts
+
+[ror-hosts:vars]
+statusMessage=success
+rorArtifactBucketName=nds-cync-uat-artifacts
+rorArtifactName=cync_ror_{{ ror_version }}.tar.gz
+configFileBucket=nds-cync-uat-config
+databasefilename=nds-cync-uat-db-config.yml
+cdnbucket=nds-cync-uat-cdn
+envname=uat
+regionname=us-east-1
+
+
+[multi-collateral-loan-hosts:vars]
+rorArtifactBucketName=nds-cync-uat-artifacts
+multiloanrorArtifactName=cync_multi_collateral_{{ multiloanror_version }}.tar.gz
+envname=uat
+configFileBucket=nds-cync-uat-config
+databasefilename=nds-cync-uat-mcl-db-config.yml
+regionname=us-east-1
+statusMessage=success
+
+[angular-hosts:vars]
+AngularArtifactBucketName=nds-cync-uat-artifacts
+statusMessage=completed
+AngularArtifactName=ngbuild_{{ angular_version }}.tar.gz
+configureBucketName=nds-cync-uat-config
+regionname=us-east-1
+angularPath=/opt/angular
+MaintenanceWindowBucket=nds-cync-uat-config
+MaintenancePagePath=/var/www/html/uat/maintenance.html
+
+[angular-term-loan-hosts:vars]
+AngularTermLoanArtifactBucketName=nds-cync-uat-artifacts
+statusMessage=success
+AngularTermLoanArtifactName=termloan_angular_ngbuild_{{ termloan_angular_version }}.tar.gz
+configureBucketName=nds-cync-uat-config
+regionname=us-east-1
+termloanpath=/opt/term-loan
+
+[angular-fa-hosts:vars]
+AngularFaArtifactBucketName=nds-cync-uat-artifacts
+statusMessage=completed
+AngularFaArtifactName=fa_ngbuild_{{ financial_angular_version }}.tar.gz
+configureBucketName=nds-cync-uat-config
+faangularPath=/opt/financial
+regionname=us-east-1
+MaintenanceWindowBucket=nds-cync-uat-config
+
+[angular-cash-hosts:vars]
+AngularCashArtifactBucketName=nds-cync-uat-artifacts
+statusMessage=completed
+AngularCashArtifactName=cashapp_ngbuild_{{ cashapp_angular_version }}.tar.gz
+configureBucketName=nds-cync-uat-config
+regionname=us-east-1
+MaintenanceWindowBucket=nds-cync-uat-config
+
+
+[ror-cashapp-hosts:vars]
+rorArtifactBucketName=nds-cync-uat-artifacts
+statusMessage=completed
+rorCashArtifactName=cync_cash_{{ cashapp_version  }}.tar.gz
+envname=uat
+configFileBucket=nds-cync-uat-config
+databasefilename=nds-cync-uat-cashapp-db-config.yml
+regionname=us-east-1
+MaintenanceWindowBucket=nds-cync-uat-config
+
+
+[angular-rw-hosts:vars]
+AngularRWArtifactBucketName=nds-cync-uat-artifacts
+statusMessage=completed
+configureBucketName=nds-cync-uat-config
+rwangularPath=/opt/insights
+regionname=us-east-1
+AngularRWArtifactName=rw_ngbuild_{{ rw_angular_version }}.tar.gz
+
+[ror-hosts:children]
+unicorn-hosts
+sidekiq-hosts
+cron-hosts
+sidekiq-similarity-hosts
+
+

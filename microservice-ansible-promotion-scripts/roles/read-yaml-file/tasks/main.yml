@@ -1,0 +1,63 @@
+---
+- name: Include vars from manifest.yaml
+  include_vars:
+    file: manifest.yaml
+    name: manifest
+
+# - name: Download the current microservice info file
+#   aws_s3:
+#     bucket: "{{config_s3_bucket}}"
+#     region: "us-east-1"
+#     object: "{{usecase_micro_service_object_name}}"
+#     dest: "{{ansible_script_location}}{{all_service_info_file_location}}{{usecase_micro_service_object_name}}"
+#     mode: get
+
+# - name: Download the rollback microservice empty file into var folder
+#   aws_s3:
+#     bucket: "{{config_s3_bucket}}"
+#     region: "us-east-1"
+#     object: "{{rollback_object_name}}"
+#     dest: "{{ansible_script_location}}{{all_service_info_file_location}}{{rollback_object_name}}"
+#     mode: get
+
+# - name: Include vars from all_service_current_running_version.yaml
+#   include_vars:
+#     file: "{{usecase_micro_service_object_name}}"
+#     name: all_service_info
+
+- set_fact:
+    task_status: "OK"
+
+- name: "Trigger deployment one by one"
+  include_role:
+    name: ../roles/microservice-actual-deployment
+  vars:
+    image_from_manifest: "{{ item[1].destination_account_image_repo_name }}"
+    version_from_manifest: "{{ item[1].version }}"
+    mircroservice_name_from_manifest: "{{ item[0] }}"
+    ecs_cluster_name_from_manifest: "{{ item[1].ecs_cluster_name}}"
+  when: task_status == "OK"
+  with_list: "{{ manifest|dictsort }}"
+
+# - fail:
+#     msg: "Deployment failed"
+#   when: last_successful_deployed_service is not defined
+
+# - name: "Update version info in all service current running info file"
+#   replace:
+#     path: "{{ansible_script_location}}{{all_service_info_file_location}}{{usecase_micro_service_object_name}}"
+#     regexp: '(?<=^{{item.key}}:\s\W\sversion\W\s)[0-9a-z.]+$'
+#     replace: "{{item.value.version}}"
+#   when: task_status == "OK"
+#   with_dict: "{{ manifest}}"
+
+# - name: Upload into latest all_service_current_running_version file into s3 bucket
+#   aws_s3:
+#     bucket: "{{config_s3_bucket}}"
+#     region: "us-east-1"
+#     object: "{{usecase_micro_service_object_name}}"
+#     src: "{{ansible_script_location}}{{all_service_info_file_location}}{{usecase_micro_service_object_name}}"
+#     mode: put
+#   when: task_status == "OK"
+
+  

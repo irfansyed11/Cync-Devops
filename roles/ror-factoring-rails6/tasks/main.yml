@@ -1,0 +1,103 @@
+---
+- name: delete contents of cynccore folder
+  shell: rm -rf /opt/cynccore/*
+
+- name: Download the artifact from s3 bucket to the remote node
+  aws_s3:
+        bucket: "{{ rorArtifactBucketName}}"
+        object: "/cync-factoring-app/{{ rorArtifactName }}"
+        dest: /opt/cynccore/cync_ror.tar.gz
+        mode: get
+- name: Extract the downloaded artifact
+  unarchive:
+    src: /opt/cynccore/cync_ror.tar.gz
+    dest: /opt/cynccore
+    remote_src: yes
+
+- name: Ensure directories are 0755
+  command: find /opt/cynccore/ -type d -exec chmod 0755 * {} \;
+
+- name: Ensure file  are 0644
+  command: find /opt/cynccore/cync-base/public/ -type f -exec chmod 0644 * {} \;
+
+- name: delete the tar.gz file
+  file:
+    path: /opt/cynccore/cync_ror.tar.gz
+    state: absent
+- name: Download the sidekiq god configuration file to the respective application folder
+  when: inventory_hostname in groups['factoring-rails6-sidekiq-hosts']
+  aws_s3:
+        bucket: "{{ configFileBucket }}"
+        object: "/cync-factoring-app/unicorn_sidekiq.god"
+        dest: /opt/cynccore/cync-base/unicorn_sidekiq.god
+        mode: get
+
+- name: install gems
+  command: bash -lc "cd /opt/cynccore/cync-base && bundle install --local"
+- name: Download the database configuration file to the respective application folder
+  aws_s3:
+        bucket: "{{ configFileBucket }}"
+        object: "/cync-factoring-app/{{ databasefilename }}"
+        dest: /opt/cynccore/cync-base/config/database.yml
+        mode: get
+- name: Run DB migrations
+  when: inventory_hostname in groups['factoring-rails6-unicorn-hosts']
+  command: bash -lc "cd /opt/cynccore/cync-base && bundle exec rake cync:db_migrate RAILS_ENV={{ envname }} && bundle exec rake cync_cloud:run_engine_migration RAILS_ENV={{ envname }}"
+- name: Run task runner
+  when: inventory_hostname in groups['factoring-rails6-unicorn-hosts']
+  command: bash -lc "cd /opt/cynccore/cync-base && bundle exec rake task:runner RAILS_ENV={{ envname }} && bundle exec rake update:version RAILS_ENV={{envname}}"
+- name: Kill Unicorn process(temp solution)
+  when: inventory_hostname in groups['factoring-rails6-unicorn-hosts']
+  command: bash -lc "cd /opt/pids && kill -9 `cat unicorn.pid` "
+  ignore_errors: yes
+- name: Restart Unicorn
+  when: inventory_hostname in groups['factoring-rails6-unicorn-hosts'] #or inventory_hostname in groups['factoring-rails6-sidekiq-hosts']
+  command: bash -lc "cd /opt/cynccore/cync-base && bundle exec rake unicorn:restart RAILS_ENV={{ envname }}"
+- name: Ensure directories are 0755
+  command: find /opt/cynccore/cync-base/ -type d -exec chmod 0755 tmp {} \;
+- name: Run Import sql stored procedure
+  when: inventory_hostname in groups['factoring-rails6-unicorn-hosts'] #or inventory_hostname in groups['factoring-rails6-sidekiq-hosts']
+  command: bash -lc "cd /opt/cynccore/cync-base && bundle exec rake abl:import_sql RAILS_ENV={{ envname }}"
+- name: Export rails environment
+  when: inventory_hostname in groups['factoring-rails6-sidekiq-hosts'] 
+  command: bash -lc "cd /opt/cynccore/cync-base && export RAILS_ENV={{ envname }}"
+- name: Stop Sidekiq
+  when: inventory_hostname in groups['factoring-rails6-sidekiq-hosts']
+  command: bash -lc "cd /opt/cynccore/cync-base && god terminate"
+  ignore_errors: True
+- name: Restart Sidekiq
+  when: inventory_hostname in groups['factoring-rails6-sidekiq-hosts']
+  command: bash -lc "cd /opt/cynccore/cync-base && god -c unicorn_sidekiq.god RAILS_ENV={{ envname }}"
+- name: Update Crontab
+  when: inventory_hostname in groups['factoring-rails6-unicorn-hosts']
+  command: bash -lc "cd /opt/cynccore/cync-base && bundle exec whenever --update-crontab --set environment={{ envname }}"
+- name: sync the application related assets to CDN bucket
+  when: inventory_hostname in groups['factoring-rails6-unicorn-hosts']
+  s3_sync:
+    bucket: "{{ cdnbucket }}"
+    #permission: public-read
+    file_root: /opt/cynccore/cync-base/public/fact-assets
+    key_prefix: Base/fact-assets
+    mode: push
+    region: "{{ regionname }}"
+
+- name: Get the PATH value
+  command: "echo $PATH"
+  register: command_output
+- cron:
+    name: PATH
+    env: yes
+    value: "{{ command_output.stdout }}"
+- name: Add Unicorn restart to Crontab
+  when: inventory_hostname in groups['factoring-rails6-unicorn-hosts']
+  cron:
+    name: Unicorn restart Crontab
+    special_time: reboot
+    job: "/bin/bash -l -c 'cd /opt/cynccore/cync-base && bundle exec rake unicorn:restart RAILS_ENV={{ envname }}' "
+- name: Add Sidekiq restart to Crontab
+  when: inventory_hostname in groups['factoring-rails6-sidekiq-hosts']
+  cron:
+    name: Sidekiq restart Crontab
+    special_time: reboot
+    job: "/bin/bash -l -c 'cd /opt/cynccore/cync-base && god -c unicorn_sidekiq.god RAILS_ENV={{ envname }}' "
+

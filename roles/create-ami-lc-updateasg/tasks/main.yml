@@ -1,0 +1,105 @@
+---
+- name: Get the timestamp
+  command: date +%d%b%Y-%H%M
+  register: timestamp
+
+- name: "Registering the instance names for  - {{item.tagName}}"
+  set_fact:
+    instanceName: "{{item.tagName}}"
+    instanceType: "{{item.instanceType}}"
+    autoScalingGroupName: "{{item.autoScalingGroupName}}"
+    deviceName: "{{item.devicename}}"
+    deviceType: "{{item.devicetype}}"
+    volumeSize: "{{item.size}}"
+    createlaunchConfig: "{{item.createlc}}"
+    waitForAmiCreation: "{{item.waitforami}}"
+    amiTags: "{{item.tags}}"
+    noreboot: "{{item.noreboot}}"
+    EbsOptimized: "{{ item.ebsoptimized}}"
+    InstanceMonitoring: "{{ item.instancemonitoring }}"
+    metricsCollection: "{{ item.metricscollection }}"
+    some_list: []
+- name: "Find EC2 Facts for  - {{item.tagName}}"
+  ec2_instance_facts:
+    region: "{{ regionname }}"
+    filters:
+      instance-state-name: running
+      "tag:Name": "{{item.tagName}}"
+      "tag:State": "{{item.tagState}}"
+  register: ec2_instances
+
+  #- name: "create AMI for  - {{item.tagName}}"
+  #ec2_ami:
+  #  instance_id: "{{ec2_instances.instances[0].instance_id}}"
+  #  region: "{{ regionname }}"
+  #  wait: "{{waitForAmiCreation}}"
+  #  name: "{{instanceName}}-{{timestamp.stdout}}"
+  #  tags: "{{amiTags}}"
+  #  no_reboot: "{{noreboot}}"
+  #register: ami_array
+ 
+- name: "Create AMI for  - {{item.tagName}}"
+  shell: "cd /home/ubuntu/cync-devops-ansible/jenkins_sh_files && ./ami.sh {{aws_account_id}} {{ec2_instances.instances[0].instance_id}} {{instanceName}} {{regionname}} \"{{amiTags}}\" {{noreboot}} {{waitForAmiCreation}}"
+  register: shell_scriptoutput
+
+- debug:
+    msg: "{{shell_scriptoutput.stdout}}"
+
+- name: "ASG facts for  - {{item.tagName}}"
+  ec2_asg_facts:
+    region: "{{ regionname }}"
+    name: "{{autoScalingGroupName}}"
+  register: asg
+
+- name: "Create an ec2 launch template for  - {{item.LtName}}"
+  when: createlaunchConfig == "1"
+  command: bash -lc "aws ec2 create-launch-template-version --region {{ regionname }} --launch-template-name {{item.LtName}} --source-version {{asg.results[0].launch_template.version}} --launch-template-data "ImageId={{shell_scriptoutput.stdout}}""
+  register: lc_result
+
+# below one from development branch
+# - set_fact:
+#     some_list: "{{some_list | default([]) | union([asg_process.process_name])}}"
+#   with_items: "{{ asg.results[0].suspended_processes }}"
+#   no_log: true
+#   loop_control:
+#     loop_var: asg_process
+
+# below one from dev jumphost
+- set_fact:
+    some_list: "{{some_list | default([]) | union([asg_process.process_name])}}"
+  with_items: "{{ asg.results[0].suspended_processes }}"
+  loop_control:
+    loop_var: asg_process
+
+- set_fact:
+    some_list: "{{ asg.results[0].suspended_processes }}"
+  when: some_list is undefined
+
+# below one from development branch
+# - name: Update Auto Scaling Group with launch configuration name
+#   when: createlaunchConfig == "1"
+#   ec2_asg:
+#     region: "{{ regionname }}"
+#     name: "{{autoScalingGroupName }}"
+#     launch_config_name: "{{lc_result.name}}"
+#     termination_policies: "{{ asg.results[0].termination_policies }}"
+#     suspend_processes: "{{ some_list if asg.results[0].suspended_processes else [] }}" 
+#     state: present
+#     wait_for_instances: no
+#   register: asg_result
+
+# Below one from dev jumphost
+- name: "Update Auto Scaling Group with launch template latest version for - {{item.tagName}}"
+  when: createlaunchConfig == "1"
+  ec2_asg:
+    region: "{{ regionname }}"
+    name: "{{autoScalingGroupName }}"
+    launch_template:
+        launch_template_name: "{{item.LtName}}"
+    termination_policies: "{{ asg.results[0].termination_policies }}"
+    suspend_processes: "{{ some_list if asg.results[0].suspended_processes else [] }}" 
+    metrics_collection: "{{ metricsCollection }}"
+    state: present
+    wait_for_instances: no
+  register: asg_result
+
